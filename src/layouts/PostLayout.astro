@@ -1,0 +1,62 @@
+---
+import Base from './Base.astro';
+import TagList from '../components/TagList.astro';
+
+interface Props {
+  entry: import('astro:content').CollectionEntry<'cuaderno' | 'escritura' | 'dibujos' | 'rasgunos' | 'proceso'>;
+  locale: string;
+  section: string;
+}
+
+const { entry, locale, section } = Astro.props;
+const { data } = entry;
+const date = new Date(data.date).toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const updated = data.updated
+  ? new Date(data.updated).toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+  : null;
+---
+
+<Base title={data.title} locale={locale}>
+  <article>
+    <header class="mb-8">
+      <h1 class="text-2xl md:text-3xl mb-2">{data.title}</h1>
+      <div class="flex flex-wrap items-center gap-3 text-sm text-[var(--color-muted)]">
+        <time datetime={data.date.toISOString()}>
+          {date}
+        </time>
+        {updated && (
+          <span>
+            &middot; {locale === 'es' ? 'Actualizado' : 'Updated'} <time datetime={data.updated!.toISOString()}>{updated}</time>
+          </span>
+        )}
+      </div>
+      {data.tags.length > 0 && <TagList tags={data.tags} locale={locale} />}
+      {data.image && (
+        <img
+          src={data.image}
+          alt={data.title}
+          class="w-full mt-6 rounded-lg"
+        />
+      )}
+    </header>
+    <div class="prose-custom">
+      <slot />
+    </div>
+  </article>
+  <nav class="mt-12 pt-6 border-t border-[var(--color-border)]">
+    <a
+      href={`/${locale}/${section}/`}
+      class="text-sm text-[var(--color-muted)] hover:text-[var(--color-ink)] no-underline"
+    >
+      &larr; {locale === 'es' ? 'Volver' : 'Back'}
+    </a>
+  </nav>
+</Base>

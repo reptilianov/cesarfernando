@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const locale = Astro.currentLocale || 'es';
+const { t } = useTranslations(locale);
+
+const sections = ['cuaderno', 'escritura', 'dibujos', 'rasgunos', 'proceso'] as const;
+const allPosts: { post: any; collection: string }[] = [];
+
+for (const name of sections) {
+  const posts = await getCollection(name, ({ data }) => !data.draft && data.lang === locale);
+  for (const post of posts) {
+    allPosts.push({ post, collection: name });
+  }
+}
+
+allPosts.sort((a, b) => b.post.data.date.getTime() - a.post.data.date.getTime());
+const latest = allPosts.slice(0, 12);
+---
+
+<Base title="smutcito" locale={locale}>
+  <section>
+    <h1 class="text-xl mb-6 text-[var(--color-ink-light)] font-normal">
+      {t('posts_recientes')}
+    </h1>
+    {latest.length === 0 ? (
+      <p class="text-[var(--color-muted)]">{t('sin_posts')}</p>
+    ) : (
+      <div>
+        {latest.map(({ post, collection }) => (
+          <PostCard entry={post} locale={locale} section={collection} showImage />
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

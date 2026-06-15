@@ -1,0 +1,33 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { useTranslations } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const locale = Astro.currentLocale || 'es';
+const { t } = useTranslations(locale);
+
+const entries = await getCollection('escritura', ({ data }) => !data.draft && data.lang === locale);
+entries.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Base title={t('escritura')} locale={locale}>
+  <section>
+    <h1 class="text-xl mb-6 text-[var(--color-ink-light)] font-normal">
+      {t('escritura')}
+    </h1>
+    {entries.length === 0 ? (
+      <p class="text-[var(--color-muted)]">{t('sin_posts')}</p>
+    ) : (
+      <div>
+        {entries.map((entry) => (
+          <PostCard entry={entry} locale={locale} section="escritura" />
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

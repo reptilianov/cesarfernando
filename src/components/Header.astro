@@ -1,0 +1,62 @@
+---
+import { useTranslations } from '../i18n/utils';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: string;
+  currentSection: string;
+}
+
+const { locale, currentSection } = Astro.props;
+const { t } = useTranslations(locale);
+
+const sections = [
+  { key: 'home', path: '' },
+  { key: 'cuaderno', path: 'cuaderno' },
+  { key: 'escritura', path: 'escritura' },
+  { key: 'dibujos', path: 'dibujos' },
+  { key: 'rasgunos', path: 'rasgunos' },
+  { key: 'proceso', path: 'proceso' },
+  { key: 'sobre', path: 'sobre' },
+] as const;
+
+const labels: Record<string, string> = {
+  home: t('home'),
+  cuaderno: t('cuaderno'),
+  escritura: t('escritura'),
+  dibujos: t('dibujos'),
+  rasgunos: t('rasgunos'),
+  proceso: t('proceso'),
+  sobre: t('sobre'),
+};
+---
+
+<header class="bg-[var(--color-paper)] border-b border-[var(--color-border)]">
+  <div class="max-w-[750px] mx-auto px-8 md:px-16 py-6">
+    <div class="text-center mb-5">
+      <a href={`/${locale}/`} class="no-underline">
+        <h1 class="font-display text-3xl md:text-4xl tracking-[0.08em] font-bold text-[var(--color-ink)] m-0 uppercase">
+          César Fernando
+        </h1>
+        <p class="font-body italic text-[var(--color-gold-dark)] text-sm tracking-[0.06em] mt-1">
+          {t('descripcion_sitio')}
+        </p>
+      </a>
+    </div>
+    <nav class="flex flex-wrap items-center justify-center gap-1 md:gap-3">
+      {sections.map((section) => (
+        <a
+          href={`/${locale}${section.path ? `/${section.path}/` : '/'}`}
+          class={`px-3 py-1 text-sm no-underline transition-colors font-body ${
+            currentSection === section.key
+              ? 'text-[var(--color-amber)] border-b border-[var(--color-gold)]'
+              : 'text-[var(--color-ink-muted)] hover:text-[var(--color-amber)]'
+          }`}
+        >
+          {labels[section.key]}
+        </a>
+      ))}
+      <LanguageSwitcher locale={locale} />
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const locale = Astro.currentLocale || 'es';
+const { t } = useTranslations(locale);
+
+const entries = await getCollection('sobre', ({ data }) => data.lang === locale);
+const entry = entries[0];
+
+let Content: any = null;
+if (entry) {
+  const rendered = await entry.render();
+  Content = rendered.Content;
+}
+---
+
+<Base title={t('sobre')} locale={locale}>
+  <section>
+    <h1 class="text-xl mb-6 text-[var(--color-ink-light)] font-normal">
+      {t('sobre')}
+    </h1>
+    {Content ? (
+      <div class="prose-custom">
+        <Content />
+      </div>
+    ) : (
+      <p class="text-[var(--color-muted)]">{t('sin_posts')}</p>
+    )}
+  </section>
+</Base>

@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import TagList from './TagList.astro';
+
+interface Props {
+  entry: CollectionEntry<'cuaderno' | 'escritura' | 'dibujos' | 'rasgunos' | 'proceso'>;
+  locale: string;
+  section: string;
+  showImage?: boolean;
+}
+
+const { entry, locale, section, showImage } = Astro.props;
+const { data } = entry;
+const date = new Date(data.date).toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const href = `/${locale}/${section}/${data.slug || entry.slug}/`;
+---
+
+<article class="group border-b border-[var(--color-border-light)] py-5 last:border-b-0">
+  {showImage && data.image && (
+    <a href={href} class="block mb-3 overflow-hidden">
+      <img
+        src={data.image}
+        alt={data.title}
+        class="w-full h-44 object-cover transition-all duration-500 group-hover:opacity-90"
+        loading="lazy"
+      />
+    </a>
+  )}
+  <div class="flex flex-col gap-1">
+    <time datetime={data.date.toISOString()} class="text-xs text-[var(--color-ink-muted)] font-body">
+      {date}
+    </time>
+    <h2 class="text-lg leading-snug m-0 font-display">
+      <a href={href} class="text-[var(--color-ink)] hover:text-[var(--color-gold-dark)] no-underline">
+        {data.title}
+      </a>
+    </h2>
+    {data.summary && (
+      <p class="text-sm text-[var(--color-ink-light)] m-0 line-clamp-2 font-body">{data.summary}</p>
+    )}
+    {data.tags.length > 0 && <TagList tags={data.tags} locale={locale} />}
+  </div>
+</article>

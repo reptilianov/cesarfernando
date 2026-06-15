@@ -1,0 +1,49 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entries: CollectionEntry<'dibujos'>[];
+  locale: string;
+}
+
+const { entries, locale } = Astro.props;
+---
+
+<div class="masonry">
+  {entries.map((entry) => {
+    const { data } = entry;
+    const href = `/${locale}/dibujos/${data.slug || entry.slug}/`;
+    const date = new Date(data.date).toLocaleDateString(locale === 'es' ? 'es-MX' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    return (
+      <a href={href} class="block group no-underline">
+        <div class="bg-[var(--color-dramatis)] overflow-hidden">
+          {data.image ? (
+            <img
+              src={data.image}
+              alt={data.title}
+              class="w-full h-auto transition-all duration-500 group-hover:opacity-90"
+              loading="lazy"
+            />
+          ) : (
+            <div class="aspect-[4/3] flex items-center justify-center text-[var(--color-ink-muted)] text-sm italic font-body">
+              sin imagen
+            </div>
+          )}
+        </div>
+        <div class="mt-2 px-0.5">
+          <h3 class="text-sm font-display text-[var(--color-ink)] m-0 group-hover:text-[var(--color-gold-dark)] transition-colors">
+            {data.title}
+          </h3>
+          <time datetime={data.date.toISOString()} class="text-xs text-[var(--color-ink-muted)] font-body italic">
+            {date}
+          </time>
+        </div>
+      </a>
+    );
+  })}
+</div>

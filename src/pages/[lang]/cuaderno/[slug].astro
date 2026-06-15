@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import PostLayout from '../../../layouts/PostLayout.astro';
+import { getLocalizedEntry } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('cuaderno', ({ data }) => !data.draft);
+  const slugMap = new Map<string, typeof entries>();
+  for (const entry of entries) {
+    const s = entry.data.slug || entry.slug;
+    if (!slugMap.has(s)) slugMap.set(s, []);
+    slugMap.get(s)!.push(entry);
+  }
+  return Array.from(slugMap.entries()).flatMap(([slug, related]) => [
+    { params: { lang: 'es', slug }, props: { related } },
+    { params: { lang: 'en', slug }, props: { related } },
+  ]);
+}
+
+const { related } = Astro.props;
+const locale = Astro.currentLocale || 'es';
+const entry = getLocalizedEntry(related, locale);
+const { Content } = await entry.render();
+---
+
+<PostLayout entry={entry} locale={locale} section="cuaderno">
+  <Content />
+</PostLayout>

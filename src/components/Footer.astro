@@ -1,0 +1,30 @@
+---
+import { useTranslations } from '../i18n/utils';
+
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<footer class="border-t border-[var(--color-border)] mt-10 py-8 px-4">
+  <div class="max-w-[750px] mx-auto flex flex-col md:flex-row justify-between gap-4 text-sm text-[var(--color-ink-muted)] font-body">
+    <div>
+      <p class="font-display text-[var(--color-ink)] font-semibold tracking-wide">César Fernando</p>
+      <p class="italic">{t('descripcion_sitio')}</p>
+    </div>
+    <div class="flex flex-wrap gap-6">
+      <a href={`/${locale}/cuaderno/`} class="no-underline hover:text-[var(--color-amber)]">
+        {t('cuaderno')}
+      </a>
+      <a href={`/${locale}/escritura/`} class="no-underline hover:text-[var(--color-amber)]">
+        {t('escritura')}
+      </a>
+      <a href={`/${locale}/sobre/`} class="no-underline hover:text-[var(--color-amber)]">
+        {t('sobre')}
+      </a>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const otherLocale = locale === 'es' ? 'en' : 'es';
+const label = locale === 'es' ? 'EN' : 'ES';
+const currentPath = Astro.url.pathname;
+const otherPath = currentPath.replace(`/${locale}`, `/${otherLocale}`);
+---
+
+<a
+  href={otherPath}
+  class="text-xs px-2 py-0.5 text-[var(--color-ink-muted)] hover:text-[var(--color-amber)] no-underline transition-colors italic font-body"
+  title={locale === 'es' ? 'English' : 'Español'}
+>
+  {label}
+</a>

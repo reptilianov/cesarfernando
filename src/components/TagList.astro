@@ -1,0 +1,16 @@
+---
+interface Props {
+  tags: string[];
+  locale: string;
+}
+
+const { tags, locale } = Astro.props;
+---
+
+<div class="flex flex-wrap gap-1.5 mt-1">
+  {tags.map((tag) => (
+    <a href={`/${locale}/etiqueta/${tag.toLowerCase().replace(/\s+/g, '-')}/`} class="tag no-underline">
+      {tag}
+    </a>
+  ))}
+</div>
