@@ -7,13 +7,13 @@ type TranslationKey = keyof typeof es;
 
 export function useTranslations(locale: string) {
   const t = (key: TranslationKey): string => {
-    const dict = translations[locale as Locale] || translations.es;
-    return (dict as Record<string, string>)[key] || (translations.es as Record<string, string>)[key] || String(key);
+    const dict = translations[locale as Locale] || translations.en;
+    return (dict as Record<string, string>)[key] || (translations.en as Record<string, string>)[key] || String(key);
   };
   return { t, locale: locale as Locale };
 }
 
 export function getLocalizedEntry(entries: any[], locale: string) {
   const match = entries.find((e: any) => e.data.lang === locale);
-  return match || entries.find((e: any) => e.data.lang === 'es') || entries[0];
+  return match || entries.find((e: any) => e.data.lang === 'en') || entries[0];
 }

@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { title, description, image } = Astro.props;
-const locale = Astro.props.locale || Astro.currentLocale || 'es';
+const locale = Astro.props.locale || Astro.currentLocale || 'en';
 
 const pathname = Astro.url.pathname;
 const pathParts = pathname.split('/').filter(Boolean);

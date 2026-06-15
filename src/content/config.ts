@@ -7,7 +7,7 @@ const postCollection = defineCollection({
     date: z.date(),
     updated: z.date().optional(),
     slug: z.string().optional(),
-    lang: z.enum(['es', 'en']).default('es'),
+    lang: z.enum(['es', 'en']).default('en'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
     image: z.string().optional(),
@@ -19,7 +19,7 @@ const sobreCollection = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    lang: z.enum(['es', 'en']).default('es'),
+    lang: z.enum(['es', 'en']).default('en'),
     name: z.string(),
     image: z.string().optional(),
   }),

@@ -8,7 +8,7 @@ export function getStaticPaths() {
   return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
 }
 
-const locale = Astro.currentLocale || 'es';
+const locale = Astro.currentLocale || 'en';
 const { t } = useTranslations(locale);
 
 const entries = await getCollection('cuaderno', ({ data }) => !data.draft && data.lang === locale);
