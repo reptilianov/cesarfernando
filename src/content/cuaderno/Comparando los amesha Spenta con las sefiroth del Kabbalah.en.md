@@ -2,16 +2,13 @@
 title: "Comparing the Amesha Spenta with the Sefirot of Kabbalah"
 date: 2026-06-16
 slug: amesha-spenta-sefirot-en
-lang: en
 translation_key: amesha-spenta-sefirot
+lang: en
 tags: [occultism, kabbalah, zoroastrianism]
 summary: "A comparative look at the divine emanations of Mazdeism and the kabbalistic Tree of Life."
-image: "/images/cuaderno/captura.jpg"
 ---
 
 The Amesha Spenta of Zoroastrianism and the Sefirot of Kabbalah share a strikingly similar structure: both are divine emanations that mediate between the absolute and the material.
-
-![](/images/cuaderno/captura.jpg)
 
 On the left side we see the sefirotic tree with Keter at the top and Malkuth at the base. On the right side, the Amesha Spenta with Ahura Mazda at the summit. The correspondence is not one-to-one, but the pattern is undeniable: six pairs of opposites balanced along a central axis.
 
