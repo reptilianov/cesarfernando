@@ -1,6 +1,7 @@
 dist/
 node_modules/
 .astro/
+.obsidian/
 .env
 .DS_Store
 *.log
