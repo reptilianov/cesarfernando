@@ -1,8 +1,9 @@
 ---
 title: "Sketch: Sin against the Beast"
 date: 2026-06-05
-slug: sin-contra-bestia
+slug: sin-contra-bestia-en
 lang: en
+translation_key: sin-contra-bestia
 tags: [drawing, sketch, mythology]
 image: "/images/dibujos/placeholder.svg"
 summary: "Pencil study of the moon god Sin confronting the beast Humbaba."

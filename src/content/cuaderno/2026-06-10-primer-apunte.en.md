@@ -1,8 +1,9 @@
 ---
 title: "First note: symbols and echoes"
 date: 2026-06-10
-slug: primer-apunte
+slug: primer-apunte-en
 lang: en
+translation_key: primer-apunte
 tags: [occultism, symbols]
 summary: "Scattered notes on the recurrence of certain symbols in my recent readings."
 ---

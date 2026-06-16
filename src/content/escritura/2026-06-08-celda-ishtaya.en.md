@@ -1,8 +1,9 @@
 ---
 title: "Fragment: Ishtaya's Cell"
 date: 2026-06-08
-slug: celda-ishtaya
+slug: celda-ishtaya-en
 lang: en
+translation_key: celda-ishtaya
 tags: [writing, novel, previews]
 summary: "First fragment from the novel in progress. Babylon, 6th century BC."
 ---

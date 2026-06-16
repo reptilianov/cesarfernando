@@ -17,6 +17,7 @@ export const es = {
   volver: 'Volver',
   cambiar_idioma: 'English',
   descripcion_sitio: 'Arte y apuntes',
+  secciones: 'Secciones',
   acerca_de: 'Acerca de',
   redes: 'Redes',
   suscribirse: 'Suscribirse',

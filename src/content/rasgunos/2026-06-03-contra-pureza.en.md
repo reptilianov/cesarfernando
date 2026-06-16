@@ -1,8 +1,9 @@
 ---
 title: "Against ideological purity"
 date: 2026-06-03
-slug: contra-pureza-ideologica
+slug: contra-pureza-ideologica-en
 lang: en
+translation_key: contra-pureza-ideologica
 tags: [politics, opinion]
 summary: "Ideological purity is the refuge of those who prefer being right to getting results."
 ---

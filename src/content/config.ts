@@ -7,6 +7,7 @@ const postCollection = defineCollection({
     date: z.date(),
     updated: z.date().optional(),
     slug: z.string().optional(),
+    translation_key: z.string().optional(),
     lang: z.enum(['es', 'en']).default('en'),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),

@@ -7,7 +7,7 @@ export async function getStaticPaths() {
   const entries = await getCollection('dibujos', ({ data }) => !data.draft);
   const slugMap = new Map<string, typeof entries>();
   for (const entry of entries) {
-    const s = entry.data.slug || entry.slug;
+    const s = entry.data.translation_key || entry.data.slug || entry.slug;
     if (!slugMap.has(s)) slugMap.set(s, []);
     slugMap.get(s)!.push(entry);
   }

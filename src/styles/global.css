@@ -132,6 +132,41 @@
     padding: 0;
     color: inherit;
   }
+
+  article table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.9em;
+  }
+
+  article thead {
+    border-bottom: 2px solid var(--color-gold);
+  }
+
+  article th {
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95em;
+    color: var(--color-amber);
+    white-space: nowrap;
+  }
+
+  article td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--color-border-light);
+    vertical-align: top;
+  }
+
+  article tr:last-child td {
+    border-bottom: none;
+  }
+
+  article tbody tr:hover {
+    background: var(--color-dramatis);
+  }
 }
 
 @layer components {
