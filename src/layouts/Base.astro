@@ -17,6 +17,14 @@ const locale = Astro.props.locale || Astro.currentLocale || 'en';
 const pathname = Astro.url.pathname;
 const pathParts = pathname.split('/').filter(Boolean);
 const currentSection = pathParts.length > 1 ? pathParts[1] : 'home';
+
+const canonicalPath = pathname;
+const otherLocale = locale === 'es' ? 'en' : 'es';
+const otherPath = pathname.replace(`/${locale}`, `/${otherLocale}`);
+const alternatePaths = [
+  { lang: locale, path: pathname },
+  { lang: otherLocale, path: otherPath },
+];
 ---
 
 <!doctype html>
@@ -27,7 +35,7 @@ const currentSection = pathParts.length > 1 ? pathParts[1] : 'home';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
-    <SEO title={title} description={description} image={image} />
+    <SEO title={title} description={description} image={image} locale={locale} canonicalPath={canonicalPath} alternatePaths={alternatePaths} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-98BKLBE5PZ"></script>
     <script>
