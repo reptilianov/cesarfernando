@@ -1,0 +1,357 @@
+---
+export async function getStaticPaths() {
+	return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params;
+const locale = lang === 'es' || lang === 'en' ? lang : 'en';
+const isEs = locale === 'es';
+
+const pageTitle = isEs ? 'César Fernando' : 'César Fernando';
+const subtitle = isEs ? 'Arte y apuntes' : 'Art & notes';
+
+// ═══════════════ SOCIAL ICONS ═══════════════
+const socials = [
+	{ label: 'Instagram',  url: 'https://www.instagram.com/raptorian0/' },
+	{ label: 'DeviantArt', url: 'https://www.deviantart.com/raptoriano' },
+	{ label: 'Bluesky',    url: 'https://bsky.app/profile/cesarfernand0.bsky.social' },
+	{ label: 'Cara',       url: 'https://cara.app/raptoriano/portfolio' },
+	{ label: 'Ream',       url: 'https://reamstories.com/u/cesarfernand0/profile/about' },
+	{ label: 'YouTube',    url: 'https://www.youtube.com/@cesarfernand0-c1p' },
+];
+
+// ═══════════════ EDIT LINKS HERE ═══════════════
+// Agregá "image" a un link para que tenga thumbnail arriba
+const links = [
+	{
+		label: isEs ? 'Novela en progreso' : 'Novel in progress',
+		url: isEs
+			? 'https://www.estrellababilonia.com/'
+			: 'https://laststarbabylon.com/',
+		image: '/images/other/novelBanner.webp',
+	},
+	{
+		label: isEs ? 'Sitio personal' : 'Personal site',
+		url: 'https://cesarfernando.pro/',
+		desc: isEs
+			? 'Donde comparto pensamientos en voz alta, bocetos y más'
+			: 'Where I share thoughts out loud, sketches, and more',
+	},
+	{ label: isEs ? 'Dibujos' : 'Drawings', url: `/${locale}/dibujos/` },
+	{ label: isEs ? 'Rasguños' : 'Scratches', url: `/${locale}/rasgunos/` },
+	{ label: isEs ? 'Proceso' : 'Process', url: `/${locale}/proceso/` },
+	{ label: isEs ? 'Sobre mí' : 'About', url: `/${locale}/sobre/` },
+	{
+		label: isEs ? 'Sol contra Luna (report)' : 'Sun vs Moon (report)',
+		url: `/${locale}/cuaderno/religion-solar-lunar/`,
+	},
+	{
+		label: isEs ? 'Correo' : 'Email',
+		url: 'https://google.com',
+	},
+];
+
+const siteTitle = 'César Fernando';
+---
+
+<!doctype html>
+<html lang={locale}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<title>{pageTitle} — Links</title>
+		<meta
+			name="description"
+			content={subtitle}
+		/>
+		<meta
+			property="og:title"
+			content={pageTitle}
+		/>
+		<meta
+			property="og:description"
+			content={subtitle}
+		/>
+		<meta
+			property="og:type"
+			content="website"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.googleapis.com"
+		/>
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Marcellus&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="/favicon.svg"
+		/>
+		<style>
+			:root {
+				--bg: #0d0d0d;
+				--card-bg: #1a1a1a;
+				--text: #e5e5e5;
+				--text-muted: #888;
+				--accent: #c9a94e;
+				--accent-hover: #e0c060;
+				--border: #2a2a2a;
+				--font-display: 'Marcellus', serif;
+				--font-body: 'EB Garamond', Georgia, serif;
+			}
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			html {
+				background: var(--bg);
+			}
+			body {
+				font-family: var(--font-body);
+				background:
+					linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+					url('/images/other/hero-home.webp') center/cover no-repeat fixed;
+				color: var(--text);
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 3rem 1.5rem 4rem;
+				-webkit-font-smoothing: antialiased;
+			}
+
+			.container {
+				width: 100%;
+				max-width: 420px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.avatar {
+				width: 88px;
+				height: 88px;
+				border-radius: 50%;
+				background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+				border: 2px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 1.2rem;
+				font-family: var(--font-display);
+				font-size: 2rem;
+				color: var(--accent);
+				user-select: none;
+			}
+
+			.name {
+				font-family: var(--font-display);
+				font-size: 1.6rem;
+				font-weight: 600;
+				letter-spacing: 0.04em;
+				color: var(--text);
+				margin-bottom: 0.3rem;
+			}
+
+			.subtitle {
+				font-size: 1rem;
+				color: var(--text-muted);
+				font-style: italic;
+				margin-bottom: 2rem;
+			}
+
+			.links {
+				width: 100%;
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+			}
+
+			.link-btn {
+				display: block;
+				width: 100%;
+				padding: 0.9rem 1.2rem;
+				text-align: center;
+				text-decoration: none;
+				font-family: var(--font-display);
+				font-size: 1rem;
+				letter-spacing: 0.03em;
+				color: var(--text);
+				background: var(--card-bg);
+				border: 1px solid var(--border);
+				border-radius: 2px;
+				transition: all 0.25s;
+			}
+
+			.link-btn:hover {
+				background: #222;
+				border-color: var(--accent);
+				color: var(--accent-hover);
+				text-decoration: none;
+				transform: translateY(-1px);
+			}
+
+			.link-card {
+				display: block;
+				width: 100%;
+				text-decoration: none;
+				background: var(--card-bg);
+				border: 1px solid var(--border);
+				border-radius: 8px;
+				overflow: hidden;
+				transition:
+					transform 0.25s,
+					border-color 0.25s;
+			}
+			.link-card:hover {
+				transform: translateY(-2px);
+				border-color: var(--accent);
+				text-decoration: none;
+			}
+			.link-card-img {
+				aspect-ratio: 16 / 9;
+				overflow: hidden;
+				box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+			}
+			.link-card-img img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+				display: block;
+			}
+	.link-card-label {
+		display: block;
+		padding: 0.85rem 1.2rem;
+		text-align: center;
+		font-family: var(--font-display);
+		font-size: 1rem;
+		letter-spacing: 0.03em;
+		color: var(--text);
+	}
+
+	.socials {
+		display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+	.social-icon {
+		width: 40px; height: 40px;
+		display: flex; align-items: center; justify-content: center;
+		border-radius: 50%;
+		border: 1px solid var(--border);
+		color: var(--text-muted);
+		transition: all 0.25s;
+	}
+	.social-icon svg { width: 18px; height: 18px; }
+	.social-icon:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+	}
+
+	.link-desc {
+		display: block;
+		font-size: 0.8rem;
+		color: var(--text-muted);
+		font-style: italic;
+		margin-top: 0.15rem;
+	}
+
+	.footer {
+				margin-top: 3rem;
+				text-align: center;
+			}
+
+			.footer a {
+				color: var(--text-muted);
+				text-decoration: none;
+				font-size: 0.85rem;
+				font-family: var(--font-display);
+				letter-spacing: 0.04em;
+				transition: color 0.2s;
+			}
+
+			.footer a:hover {
+				color: var(--accent);
+			}
+
+			@media (max-width: 480px) {
+				body {
+					padding: 2rem 1rem 3rem;
+				}
+				.name {
+					font-size: 1.4rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="avatar">CF</div>
+			<h1 class="name">{pageTitle}</h1>
+		<p class="subtitle">{subtitle}</p>
+
+		<div class="socials">
+			{socials.map(s => (
+				<a href={s.url} class="social-icon" target="_blank" rel="noopener" title={s.label} aria-label={s.label}>
+					{s.label === 'Instagram' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+					)}
+					{s.label === 'DeviantArt' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4l3.5 9L16 4h4l-6 16H9L4 4z"/><path d="M9 14h7"/></svg>
+					)}
+					{s.label === 'Bluesky' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11c-1.5-2-4-3.5-6.5-3C2.5 8 2 10 2 11c0 3 1.5 5 4 5.5C3 17.5 2 19.5 4 21c3-1 6-4 8-7 2 3 5 6 8 7 2-1.5 1-3.5-2-4.5 2.5-.5 4-2.5 4-5.5 0-1-.5-3-3.5-3C16 8 13.5 9 12 11z"/></svg>
+					)}
+					{s.label === 'Cara' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="10" r="1.5"/><circle cx="15" cy="10" r="1.5"/><path d="M8 15c1.5 2.5 5 2.5 8 0"/></svg>
+					)}
+					{s.label === 'Ream' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+					)}
+					{s.label === 'YouTube' && (
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29.94 29.94 0 0 0 1 12a29.94 29.94 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.94 2C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2A29.94 29.94 0 0 0 23 12a29.94 29.94 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+					)}
+				</a>
+			))}
+		</div>
+
+		<div class="links">
+			{
+				links.map((link) => (
+					<a
+						href={link.url}
+						class={link.image ? 'link-card' : link.desc ? 'link-btn link-btn-desc' : 'link-btn'}
+						target={link.url.startsWith('http') ? '_blank' : '_self'}
+						rel={link.url.startsWith('http') ? 'noopener' : ''}>
+						{link.image && (
+							<div class="link-card-img">
+								<img src={link.image} alt="" loading="eager" />
+							</div>
+						)}
+						<span class={link.image ? 'link-card-label' : ''}>
+							{link.label}
+						</span>
+						{link.desc && <span class="link-desc">{link.desc}</span>}
+					</a>
+				))
+			}
+		</div>
+
+			<div class="footer">
+				<a href={`/${locale}/`}>{siteTitle}</a>
+			</div>
+		</div>
+	</body>
+</html>

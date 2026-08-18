@@ -10,24 +10,10 @@ interface Props {
 const { locale, currentSection } = Astro.props;
 const { t } = useTranslations(locale);
 
-const sections = [
-  { key: 'home', path: '' },
-  { key: 'cuaderno', path: 'cuaderno' },
-  { key: 'escritura', path: 'escritura' },
-  { key: 'dibujos', path: 'dibujos' },
-  { key: 'rasgunos', path: 'rasgunos' },
-  { key: 'proceso', path: 'proceso' },
-  { key: 'sobre', path: 'sobre' },
-] as const;
+const sections = [{ key: 'home', path: '' }] as const;
 
 const labels: Record<string, string> = {
   home: t('home'),
-  cuaderno: t('cuaderno'),
-  escritura: t('escritura'),
-  dibujos: t('dibujos'),
-  rasgunos: t('rasgunos'),
-  proceso: t('proceso'),
-  sobre: t('sobre'),
 };
 ---
 

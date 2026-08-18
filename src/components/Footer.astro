@@ -10,7 +10,7 @@ const { t } = useTranslations(locale);
 ---
 
 <footer class="border-t border-[var(--color-border)] mt-10 py-10 px-4">
-  <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-[var(--color-ink-muted)] font-body">
+  <div class="max-w-[1000px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 text-sm text-[var(--color-ink-muted)] font-body">
 
     <div>
       <p class="font-display text-[var(--color-ink)] font-semibold tracking-wide text-base">César Fernando</p>
@@ -20,16 +20,6 @@ const { t } = useTranslations(locale);
           cefev.diseno@gmail.com
         </a>
       </p>
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <p class="font-display text-[var(--color-ink)] font-semibold tracking-wide">{t('secciones')}</p>
-      <a href={`/${locale}/cuaderno/`} class="no-underline hover:text-[var(--color-amber)]">{t('cuaderno')}</a>
-      <a href={`/${locale}/escritura/`} class="no-underline hover:text-[var(--color-amber)]">{t('escritura')}</a>
-      <a href={`/${locale}/dibujos/`} class="no-underline hover:text-[var(--color-amber)]">{t('dibujos')}</a>
-      <a href={`/${locale}/rasgunos/`} class="no-underline hover:text-[var(--color-amber)]">{t('rasgunos')}</a>
-      <a href={`/${locale}/proceso/`} class="no-underline hover:text-[var(--color-amber)]">{t('proceso')}</a>
-      <a href={`/${locale}/sobre/`} class="no-underline hover:text-[var(--color-amber)]">{t('sobre')}</a>
     </div>
 
     <div>

@@ -12,8 +12,8 @@
   --color-border: #dcc88b;
   --color-border-light: #e8dbab;
   --color-dramatis: #fbf7ed;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Marcellus', serif;
+  --font-body: 'EB Garamond', Georgia, serif;
 }
 
 @layer base {

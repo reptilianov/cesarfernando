@@ -1,0 +1,711 @@
+---
+interface Props {
+  locale: string;
+}
+
+const { locale } = Astro.props;
+const isEs = locale === 'es';
+
+const copy = {
+  eyebrow: isEs ? 'Comisiones abiertas' : 'Commissions open',
+  title: 'Raptoriano',
+  role: isEs ? 'Digital artist' : 'Digital artist',
+  intro: isEs
+    ? 'Ilustración digital pictórica: personajes expresivos, piel rica, luz dramática, fantasía atmosférica e influencias antiguas, históricas y mitológicas.'
+    : 'Painterly digital illustration focused on expressive characters, rich skin tones, dramatic light, atmospheric fantasy, and ancient, historical, and mythological influences.',
+  krita: isEs
+    ? 'Cada ilustración final está pintada por mí en Krita.'
+    : 'Every final illustration is painted by me in Krita.',
+  status: isEs ? 'Commission status: Open' : 'Commission status: Open',
+  cta: isEs ? 'Pedir cotización' : 'Request a quote',
+  pricesTitle: isEs ? 'Precios iniciales' : 'Starting prices',
+  extrasTitle: isEs ? 'Extras' : 'Extras',
+  fitTitle: isEs ? 'Me interesa pintar' : 'I especially enjoy painting',
+  noTitle: isEs ? 'Por ahora no acepto' : 'Currently not accepting',
+  howTitle: isEs ? 'Cómo funciona' : 'How it works',
+  faqTitle: isEs ? 'Preguntas frecuentes' : 'FAQ',
+  linksTitle: isEs ? 'Enlaces' : 'Links',
+  galleryTitle: isEs ? 'Placeholders' : 'Placeholders',
+  galleryNote: isEs
+    ? 'Estos archivos están en su tamaño real dentro de /public/images/placeholders/.'
+    : 'These files live at real size in /public/images/placeholders/.',
+};
+
+const socials = [
+  { label: 'Instagram', url: 'https://www.instagram.com/raptorian0/' },
+  { label: 'DeviantArt', url: 'https://www.deviantart.com/raptoriano' },
+  { label: 'Bluesky', url: 'https://bsky.app/profile/cesarfernand0.bsky.social' },
+  { label: 'Cara', url: 'https://cara.app/raptoriano/portfolio' },
+  { label: 'Ream', url: 'https://reamstories.com/u/cesarfernand0/profile/about' },
+  { label: 'YouTube', url: 'https://www.youtube.com/@cesarfernand0-c1p' },
+];
+
+const links = [
+  {
+    label: isEs ? 'Novela en progreso' : 'Novel in progress',
+    url: isEs ? 'https://www.estrellababilonia.com/' : 'https://laststarbabylon.com/',
+    note: isEs ? 'Estrella de Babilonia' : 'Last Star Babylon',
+  },
+  { label: 'Portfolio', url: 'https://cara.app/raptoriano/portfolio', note: 'Cara' },
+  { label: 'DeviantArt', url: 'https://www.deviantart.com/raptoriano', note: '@raptoriano' },
+  { label: isEs ? 'Correo' : 'Email', url: 'mailto:cefev.diseno@gmail.com', note: 'cefev.diseno@gmail.com' },
+];
+
+const prices = [
+  { name: isEs ? 'Retrato / busto' : 'Portrait / bust', desc: isEs ? 'Hombros hacia arriba' : 'Shoulders and above', price: '$85 USD' },
+  { name: isEs ? 'Medio cuerpo' : 'Half body', desc: isEs ? 'Aproximadamente hasta la cintura' : 'Approximately waist-up', price: '$125 USD' },
+  { name: isEs ? 'Cuerpo completo' : 'Full body', desc: isEs ? 'Un personaje' : 'Single character', price: '$175 USD' },
+];
+
+const extras = isEs
+  ? ['Personaje adicional: +75%', 'Fondo atmosférico simple: incluido', 'Fondo o ambiente detallado: desde +$60', 'Outfit alterno / versión nude con la misma pose: desde +40%', 'Uso comercial: se cotiza aparte']
+  : ['Additional character: +75%', 'Simple atmospheric background: included', 'Detailed background or environment: from +$60', 'Alternate outfit / nude version using the same pose: from +40%', 'Commercial use: quoted separately'];
+
+const fit = isEs
+  ? ['Personajes humanos y humanoides', 'Cuerpos curvy, thick y variados', 'Temas históricos, antiguos y mitológicos', 'Dark fantasy e imaginería pagana', 'Retratos expresivos', 'Luz dramática o inusual', 'Desnudez sensual y artística', 'OCs con rostros, cuerpos y personalidad distintiva']
+  : ['Human and humanoid characters', 'Curvy, thick, and varied body types', 'Historical, ancient, and mythological themes', 'Dark fantasy and pagan imagery', 'Expressive portraits', 'Dramatic or unusual lighting', 'Sensual and artistic nudity', 'Original characters with distinctive faces, bodies, and personalities'];
+
+const notAccepted = isEs
+  ? ['Mecha o maquinaria muy técnica', 'Furry / personajes antropomórficos', 'Imitación exacta del estilo de otro artista vivo', 'Personajes infantiles o menores de edad en cualquier contexto, sin excepción']
+  : ['Mecha or highly technical machinery', 'Furry / anthropomorphic characters', "Imitations of another living artist's exact style", 'Child or underage characters in any context, without exception'];
+
+const steps = isEs
+  ? ['Mándame la descripción y referencias visuales.', 'Dime si buscas retrato, medio cuerpo o cuerpo completo, con pose, mood o atmósfera.', 'Confirmo precio final y tiempo estimado.', '50% de pago para iniciar.', 'Te mando sketch/WIP para aprobación antes del render final.', 'El 50% restante se paga antes de entregar el archivo en alta resolución.']
+  : ['Send me your character description and visual references.', 'Tell me whether you want a portrait, half body, or full body illustration, with pose, mood, or atmosphere references.', "I'll confirm the final price and estimated delivery time.", '50% payment is required to begin.', "I'll send a sketch/WIP for approval before the final rendering.", 'The remaining 50% is paid before delivery of the finished high-resolution artwork.'];
+
+const faqs = isEs
+  ? [
+      {
+        question: '¿Usas IA?',
+        answer:
+          'No uso IA en la pieza final. Lo que recibes está dibujado y pintado por mí en Krita: proporciones, decisiones de composición, bordes, color y brochazos. En algunos casos puedo usar herramientas de IA solo para generar referencias auxiliares sobre detalles puntuales, como textura de joyería, telas o materiales. Esas imágenes no se incorporan directamente a la obra ni sustituyen el dibujo; funcionan como referencia visual, igual que cualquier carpeta de referencias. Mi prioridad es mantener control total sobre la pieza para que se vea como el cliente y yo acordamos.',
+      },
+      {
+        question: '¿Puedes grabar un timelapse del dibujo?',
+        answer:
+          'Sí, puedo grabar timelapse cuando el archivo mide menos de 3000 x 3000 pixeles. Si el canvas es más grande, se vuelve complicado por memoria y rendimiento de la computadora. En esos casos puedo enviarte capturas del proceso si quieres documentar el avance.',
+      },
+      {
+        question: '¿Cuál es tu horario de atención?',
+        answer:
+          'Respondo mensajes de 8:00 a.m. a 6:00 p.m., hora central de Texas. Si estás en Guadalajara o en otra zona horaria, confirmo horarios por mensaje para evitar confusiones con cambios de horario.',
+      },
+      {
+        question: '¿Cuántos días tardas en entregar?',
+        answer:
+          'El tiempo normal de entrega es de 2 a 4 semanas, dependiendo de la complejidad de la pieza y de la fila de comisiones activa. Si necesitas una fecha específica, dímelo desde el inicio para revisar si es viable.',
+      },
+      {
+        question: '¿Qué referencias necesito mandar?',
+        answer:
+          'Lo ideal es enviar imágenes del personaje, descripción de personalidad, pose, expresión, vestuario, paleta de color y ejemplos de atmósfera o iluminación. No necesitas tener todo perfecto: mientras más claro sea el punto de partida, mejor puedo cotizar y pintar.',
+      },
+      {
+        question: '¿Cuántos cambios incluye la comisión?',
+        answer:
+          'Incluyo dos rondas razonables de ajustes durante las etapas de sketch o WIP. Cambios grandes después de aprobar una etapa pueden requerir costo adicional, sobre todo si implican rehacer pose, composición, vestuario o fondo.',
+      },
+      {
+        question: '¿Puedo usar la ilustración comercialmente?',
+        answer:
+          'El precio base cubre uso personal. Portadas, mercancía, publicidad, publicaciones, branding o cualquier proyecto comercial se cotizan aparte según el uso y alcance de la licencia.',
+      },
+      {
+        question: '¿Qué archivo entregas?',
+        answer:
+          'Entrego la ilustración digital terminada en alta resolución. Si necesitas un tamaño, formato o proporción específica, avísame antes de iniciar para preparar el canvas correctamente.',
+      },
+    ]
+  : [
+      {
+        question: 'Do you use AI?',
+        answer:
+          'I do not use AI in the final artwork. The piece you receive is drawn and painted by me in Krita: proportions, composition choices, edges, color, and brushwork. In some cases I may use AI tools only to create auxiliary references for specific details, such as jewelry texture, fabric, or materials. Those images are not incorporated directly into the artwork and do not replace the drawing; they function as visual reference, like any reference board. My priority is to keep full control over the piece so it looks exactly like the client and I agreed.',
+      },
+      {
+        question: 'Can you record a timelapse?',
+        answer:
+          'Yes, I can record a timelapse when the file is under 3000 x 3000 pixels. If the canvas is larger, recording becomes difficult because of memory and computer performance. In those cases I can send process screenshots instead.',
+      },
+      {
+        question: 'What are your response hours?',
+        answer:
+          'I answer messages from 8:00 a.m. to 6:00 p.m., Texas Central Time. If you are in Guadalajara or another time zone, I will confirm timing by message to avoid daylight-saving confusion.',
+      },
+      {
+        question: 'How long does delivery take?',
+        answer:
+          'Typical turnaround is 2 to 4 weeks, depending on complexity and the current commission queue. If you need a specific deadline, tell me at the beginning so I can confirm whether it is realistic.',
+      },
+      {
+        question: 'What references should I send?',
+        answer:
+          'Ideally, send character images, personality notes, pose, expression, outfit, color palette, and examples of mood or lighting. It does not need to be perfect: the clearer the starting point, the better I can quote and paint.',
+      },
+      {
+        question: 'How many revisions are included?',
+        answer:
+          'Two reasonable rounds of adjustments are included during the sketch or WIP stages. Large changes after an approved stage may require an additional fee, especially if they involve reworking the pose, composition, outfit, or background.',
+      },
+      {
+        question: 'Can I use the illustration commercially?',
+        answer:
+          'Base prices cover personal use. Book covers, merchandise, advertising, publishing, branding, or any other commercial project are quoted separately according to the use and license scope.',
+      },
+      {
+        question: 'What file do you deliver?',
+        answer:
+          'I deliver the finished digital illustration in high resolution. If you need a specific size, format, or aspect ratio, please tell me before we begin so I can set up the canvas correctly.',
+      },
+    ];
+
+const gallery = [
+  { src: '/images/placeholders/commission-hero-1045x765.jpg', label: 'commission-hero', size: '1045 x 765' },
+  { src: '/images/placeholders/portrait-862x927.jpg', label: 'portrait', size: '862 x 927' },
+  { src: '/images/placeholders/book-cover-wip-830x963.jpg', label: 'book-cover-wip', size: '830 x 963' },
+  { src: '/images/placeholders/doodle-sketch-730x810.jpg', label: 'doodle-sketch', size: '730 x 810' },
+  { src: '/images/placeholders/zohra-sketch-827x1540.jpg', label: 'zohra-sketch', size: '827 x 1540' },
+];
+---
+
+<section class="commission-home">
+  <div class="rain" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="language">
+    <a href={locale === 'es' ? '/en/' : '/es/'}>{locale === 'es' ? 'EN' : 'ES'}</a>
+  </div>
+
+  <div class="hero">
+    <div class="lace lace-top" aria-hidden="true"></div>
+    <p class="eyebrow">{copy.eyebrow}</p>
+    <div class="crest">
+      <div>
+        <span>{copy.role}</span>
+        <strong>{copy.title}</strong>
+      </div>
+    </div>
+    <p class="status">{copy.status}</p>
+    <p class="intro">{copy.intro}</p>
+    <p class="krita">{copy.krita}</p>
+    <div class="actions">
+      <a class="primary" href="mailto:cefev.diseno@gmail.com">{copy.cta}</a>
+      <a class="secondary" href="#prices">{copy.pricesTitle}</a>
+    </div>
+    <div class="hero-links" aria-label={copy.linksTitle}>
+      <div class="socials">
+        {socials.map((social) => (
+          <a href={social.url} target="_blank" rel="noopener">{social.label}</a>
+        ))}
+      </div>
+      <div class="hero-link-grid">
+        {links.map((link) => (
+          <a href={link.url} target={link.url.startsWith('http') ? '_blank' : '_self'} rel={link.url.startsWith('http') ? 'noopener' : undefined}>
+            <span>{link.label}</span>
+            <small>{link.note}</small>
+          </a>
+        ))}
+      </div>
+    </div>
+    <div class="lace lace-bottom" aria-hidden="true"></div>
+  </div>
+
+  <div class="content-shell">
+    <section id="prices" class="panel prices-panel">
+      <div class="section-heading">
+        <p>{copy.status}</p>
+        <h2>{copy.pricesTitle}</h2>
+      </div>
+      <div class="price-grid">
+        {prices.map((item) => (
+          <article class="price-card">
+            <p>{item.name}</p>
+            <span>{item.desc}</span>
+            <strong>{item.price}</strong>
+          </article>
+        ))}
+      </div>
+      <p class="fine-print">
+        {isEs
+          ? 'Diseños complejos, props elaborados, armadura, joyería, criaturas o ambientes muy detallados pueden subir el precio. Siempre confirmo el total antes del pago.'
+          : 'Complex designs, elaborate props, armor, jewelry, creatures, or highly detailed environments may increase the final price. I will always confirm the total before payment.'}
+      </p>
+    </section>
+
+    <section class="panel two-columns">
+      <div>
+        <h2>{copy.extrasTitle}</h2>
+        <ul>{extras.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h2>{copy.howTitle}</h2>
+        <ol>{steps.map((item) => <li>{item}</li>)}</ol>
+      </div>
+    </section>
+
+    <section class="panel two-columns">
+      <div>
+        <h2>{copy.fitTitle}</h2>
+        <ul>{fit.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h2>{copy.noTitle}</h2>
+        <ul>{notAccepted.map((item) => <li>{item}</li>)}</ul>
+      </div>
+    </section>
+
+    <section class="panel faq-panel">
+      <div class="section-heading">
+        <p>{copy.status}</p>
+        <h2>{copy.faqTitle}</h2>
+      </div>
+      <div class="faq-list">
+        {faqs.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="gallery-section">
+      <div class="section-heading">
+        <p>{copy.galleryNote}</p>
+        <h2>{copy.galleryTitle}</h2>
+      </div>
+      <div class="gallery">
+        {gallery.map((item) => (
+          <figure>
+            <img src={item.src} alt={item.label} loading="lazy" />
+            <figcaption>{item.label} · {item.size}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  </div>
+</section>
+
+<style>
+  :global(html) {
+    background: #111216;
+  }
+
+  .commission-home {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    color: #f5f1f4;
+    background:
+      linear-gradient(90deg, rgba(229, 239, 245, 0.82) 0%, rgba(77, 82, 95, 0.66) 36%, rgba(17, 18, 22, 0.82) 100%),
+      linear-gradient(180deg, rgba(16, 17, 22, 0.22), rgba(16, 17, 22, 0.96)),
+      url('/images/placeholders/commission-hero-1045x765.jpg') center top / cover fixed;
+    font-family: var(--font-body);
+  }
+
+  .language {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+  }
+
+  .language a {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(18, 19, 24, 0.28);
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+  }
+
+  .rain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.55;
+    z-index: 1;
+  }
+
+  .rain span {
+    position: absolute;
+    top: -12vh;
+    width: 1px;
+    height: 180px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.82));
+    transform: rotate(13deg);
+    animation: rain-fall 5s linear infinite;
+  }
+
+  .rain span:nth-child(1) { left: 12%; animation-delay: 0s; }
+  .rain span:nth-child(2) { left: 28%; animation-delay: 1.6s; height: 130px; }
+  .rain span:nth-child(3) { left: 45%; animation-delay: 0.8s; }
+  .rain span:nth-child(4) { left: 63%; animation-delay: 2.5s; height: 150px; }
+  .rain span:nth-child(5) { left: 78%; animation-delay: 1.1s; }
+  .rain span:nth-child(6) { left: 91%; animation-delay: 3.3s; height: 120px; }
+
+  @keyframes rain-fall {
+    to {
+      transform: translateY(125vh) rotate(13deg);
+    }
+  }
+
+  .hero,
+  .content-shell {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero {
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 72px 24px 52px;
+    text-align: center;
+  }
+
+  .eyebrow,
+  .section-heading p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+  }
+
+  .crest {
+    width: min(292px, 70vw);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border: 2px solid rgba(245, 241, 244, 0.86);
+    border-radius: 50% 50% 46% 46%;
+    box-shadow:
+      inset 0 0 0 8px rgba(255, 255, 255, 0.08),
+      0 18px 70px rgba(0, 0, 0, 0.34);
+    background: rgba(25, 27, 34, 0.2);
+    backdrop-filter: blur(6px);
+  }
+
+  .crest div {
+    display: grid;
+    gap: 14px;
+  }
+
+  .crest span {
+    font-family: var(--font-display);
+    font-size: clamp(1.35rem, 5vw, 2rem);
+    text-transform: uppercase;
+  }
+
+  .crest strong {
+    color: #f4b9d2;
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 5vw, 2.15rem);
+    font-weight: 600;
+  }
+
+  .status,
+  .intro,
+  .krita,
+  .fine-print {
+    margin: 0;
+    max-width: 680px;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 1.16rem;
+    line-height: 1.55;
+  }
+
+  .krita,
+  .fine-print {
+    color: rgba(255, 255, 255, 0.68);
+    font-style: italic;
+  }
+
+  .actions,
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .actions a,
+  .socials a,
+  .hero-link-grid a {
+    text-decoration: none;
+  }
+
+  .primary,
+  .secondary,
+  .socials a {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    padding: 0 18px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(10px);
+  }
+
+  .primary {
+    border-color: rgba(246, 185, 212, 0.75);
+    background: rgba(246, 185, 212, 0.2);
+  }
+
+  .hero-links {
+    width: min(760px, 100%);
+    display: grid;
+    gap: 10px;
+    margin-top: 2px;
+  }
+
+  .socials a {
+    min-height: 36px;
+    padding: 0 13px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+  }
+
+  .hero-link-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-link-grid a {
+    min-height: 58px;
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-link-grid span {
+    font-family: var(--font-display);
+    font-size: 0.96rem;
+  }
+
+  .hero-link-grid small {
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 0.76rem;
+  }
+
+  .lace {
+    width: min(760px, 82vw);
+    height: 32px;
+    opacity: 0.82;
+    background:
+      radial-gradient(circle at 20px 50%, transparent 0 10px, rgba(255, 255, 255, 0.82) 11px 12px, transparent 13px),
+      radial-gradient(circle at 52px 50%, transparent 0 10px, rgba(255, 255, 255, 0.82) 11px 12px, transparent 13px);
+    background-size: 64px 32px;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  }
+
+  .content-shell {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 12px 0 84px;
+    display: grid;
+    gap: 18px;
+  }
+
+  .panel,
+  .gallery-section {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    background: rgba(18, 19, 24, 0.68);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    backdrop-filter: blur(14px);
+    padding: clamp(22px, 4vw, 38px);
+  }
+
+  .section-heading {
+    display: grid;
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    margin: 0 0 16px;
+    padding: 0;
+    border: 0;
+    color: #f8f4f7;
+    font-size: clamp(1.45rem, 4vw, 2rem);
+  }
+
+  .section-heading h2 {
+    margin-bottom: 0;
+  }
+
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .price-card {
+    min-height: 164px;
+    display: grid;
+    align-content: space-between;
+    gap: 12px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .price-card p,
+  .price-card span,
+  .price-card strong {
+    margin: 0;
+  }
+
+  .price-card p {
+    color: #f8f4f7;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+  }
+
+  .price-card span {
+    color: rgba(255, 255, 255, 0.68);
+  }
+
+  .price-card strong {
+    color: #f6b9d4;
+    font-family: var(--font-display);
+    font-size: 1.65rem;
+  }
+
+  .fine-print {
+    margin-top: 18px;
+  }
+
+  .two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.08rem;
+    line-height: 1.58;
+  }
+
+  li + li {
+    margin-top: 10px;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  details {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  summary {
+    cursor: pointer;
+    padding: 16px 18px;
+    color: #f8f4f7;
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+  }
+
+  details p {
+    margin: 0;
+    padding: 0 18px 18px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 1.08rem;
+    line-height: 1.62;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figure img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+  }
+
+  figcaption {
+    margin-top: 8px;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 760px) {
+    .commission-home {
+      background-attachment: scroll;
+      background-position: 58% top;
+    }
+
+    .hero {
+      min-height: auto;
+      padding-top: 86px;
+    }
+
+    .price-grid,
+    .two-columns,
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-link-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 460px) {
+    .actions a,
+    .socials a {
+      width: 100%;
+    }
+
+    .hero-link-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

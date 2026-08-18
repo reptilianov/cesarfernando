@@ -1,10 +1,10 @@
 ---
-title: "Sol contra Luna: la guerra que nadie nombra"
+title: 'Sol contra Luna: la guerra que nadie nombra'
 date: 2026-06-16
 slug: religion-solar-lunar
 lang: es
 tags: [ocultismo, religión, antropología, escritura]
-summary: "No es monoteísmo contra politeísmo. Es una batalla entre dos formas de entender el tiempo, la autoridad y lo sagrado."
+summary: 'Una gran fisura teológica y cosmológica que ha recorrido el Viejo Mundo durante milenios, y que rara vez se dice así de claro: Dos formas de entender el tiempo, la autoridad y lo sagrado.'
 ---
 
 Hay una grieta que atraviesa la historia del Mediterráneo y Oriente Próximo desde hace milenios. No es la que suelen contar los libros de religión. No se trata de monoteísmo contra politeísmo, ni de bien contra mal. Es algo más antiguo y más preciso: una batalla entre dos formas de entender el tiempo, la autoridad y lo sagrado.
@@ -19,15 +19,15 @@ No es una metáfora astronómica. Es una estructura. Una que se repite, se disfr
 
 Un lado busca la verdad única que ilumina y quema. El otro cuida secretos que solo brillan de noche.
 
-| Aspecto | Sistema Solar | Sistema Lunar |
-|---|---|---|
-| Tiempo | Lineal, con origen y fin | Cíclico, rítmico, sin culminación |
-| Verdad | Revelada, absoluta | Escrita, gradual, técnica |
-| Figura central | Profeta, mártir, redentor | Escriba, astrólogo, guardián del ritmo |
-| Salvación | Por sacrificio y obediencia | Por equilibrio y corrección |
-| Rito | Sacrificio, testimonio, drama | Recitación exacta, inscripción |
-| Error | Desobediencia | Desfase, error de cálculo |
-| Autoridad | Vertical, carismática | Horizontal, por pericia y transmisión |
+| Aspecto        | Sistema Solar                 | Sistema Lunar                          |
+| -------------- | ----------------------------- | -------------------------------------- |
+| Tiempo         | Lineal, con origen y fin      | Cíclico, rítmico, sin culminación      |
+| Verdad         | Revelada, absoluta            | Escrita, gradual, técnica              |
+| Figura central | Profeta, mártir, redentor     | Escriba, astrólogo, guardián del ritmo |
+| Salvación      | Por sacrificio y obediencia   | Por equilibrio y corrección            |
+| Rito           | Sacrificio, testimonio, drama | Recitación exacta, inscripción         |
+| Error          | Desobediencia                 | Desfase, error de cálculo              |
+| Autoridad      | Vertical, carismática         | Horizontal, por pericia y transmisión  |
 
 El primer sistema vence al caos y establece orden. El segundo regula ciclos sin destruirlo. Uno habla de juicio final. El otro, de retorno y ajuste.
 
