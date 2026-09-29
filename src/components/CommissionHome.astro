@@ -1,711 +1,946 @@
 ---
+import '../styles/commission-home.css';
+import { readdirSync } from 'node:fs';
+import { basename, extname } from 'node:path';
+
 interface Props {
-  locale: string;
+	locale: string;
 }
-
 const { locale } = Astro.props;
-const isEs = locale === 'es';
-
-const copy = {
-  eyebrow: isEs ? 'Comisiones abiertas' : 'Commissions open',
-  title: 'Raptoriano',
-  role: isEs ? 'Digital artist' : 'Digital artist',
-  intro: isEs
-    ? 'Ilustración digital pictórica: personajes expresivos, piel rica, luz dramática, fantasía atmosférica e influencias antiguas, históricas y mitológicas.'
-    : 'Painterly digital illustration focused on expressive characters, rich skin tones, dramatic light, atmospheric fantasy, and ancient, historical, and mythological influences.',
-  krita: isEs
-    ? 'Cada ilustración final está pintada por mí en Krita.'
-    : 'Every final illustration is painted by me in Krita.',
-  status: isEs ? 'Commission status: Open' : 'Commission status: Open',
-  cta: isEs ? 'Pedir cotización' : 'Request a quote',
-  pricesTitle: isEs ? 'Precios iniciales' : 'Starting prices',
-  extrasTitle: isEs ? 'Extras' : 'Extras',
-  fitTitle: isEs ? 'Me interesa pintar' : 'I especially enjoy painting',
-  noTitle: isEs ? 'Por ahora no acepto' : 'Currently not accepting',
-  howTitle: isEs ? 'Cómo funciona' : 'How it works',
-  faqTitle: isEs ? 'Preguntas frecuentes' : 'FAQ',
-  linksTitle: isEs ? 'Enlaces' : 'Links',
-  galleryTitle: isEs ? 'Placeholders' : 'Placeholders',
-  galleryNote: isEs
-    ? 'Estos archivos están en su tamaño real dentro de /public/images/placeholders/.'
-    : 'These files live at real size in /public/images/placeholders/.',
-};
-
-const socials = [
-  { label: 'Instagram', url: 'https://www.instagram.com/raptorian0/' },
-  { label: 'DeviantArt', url: 'https://www.deviantart.com/raptoriano' },
-  { label: 'Bluesky', url: 'https://bsky.app/profile/cesarfernand0.bsky.social' },
-  { label: 'Cara', url: 'https://cara.app/raptoriano/portfolio' },
-  { label: 'Ream', url: 'https://reamstories.com/u/cesarfernand0/profile/about' },
-  { label: 'YouTube', url: 'https://www.youtube.com/@cesarfernand0-c1p' },
+const es = locale === 'es';
+const c = es
+	? {
+			open: 'Comisiones abiertas',
+			intro:
+				'Ilustración digital pictórica para personajes expresivos, fantasía oscura, mitología y mundos históricos.',
+			krita: 'El arte final está dibujado y pintado por mí en Krita.',
+			request: 'Solicitar una comisión',
+			prices: 'Ver precios iniciales',
+			authors: 'Paquete para autores',
+			authorTitle: 'Dale vida visual a tu libro',
+			authorLead:
+				'Una portada ilustrada y cinco ilustraciones interiores para acompañar tu historia.',
+			authorPrice: 'Desde $850 USD',
+			authorTerms:
+				'Incluye portada ilustrada, cinco ilustraciones interiores en blanco y negro y licencia comercial no exclusiva para una edición de un libro. Complejidad, color, lettering y formatos adicionales se cotizan aparte.',
+			authorCta: 'Consultar paquete para autores',
+			portfolio: 'Selección de portafolio',
+			portfolioLead:
+				'Retratos y personajes con pincelada pictórica, luz dramática y presencia narrativa.',
+			allWorks: 'Todo',
+			filterBy: 'Filtrar por categoría',
+			details: 'Ver detalles',
+			share: 'Compartir',
+			close: 'Cerrar',
+			finalArt: 'Imagen final',
+			pre2019Title: 'Imágenes previas a 2019',
+			pre2019Lead:
+				'Una selección de trabajo visual anterior: editorial, institucional, infantil y comercial.',
+			showMore: 'Ver más imágenes',
+			showLess: 'Ver menos',
+			pre2010Title: 'Imágenes previas a 2010',
+			pre2010Lead:
+				'Una pequeña arqueología visual de mis primeros trabajos, pruebas y encargos.',
+			about: 'Sobre mí',
+			narrative: 'Proyectos narrativos',
+			narrativeLead:
+				'Historias propias que también existen en inglés y español.',
+			spanish: 'Español',
+			english: 'English',
+			addLink: 'Añadir enlace',
+			aboutText:
+				'Soy César Fernando Pérez Velasco, diseñador gráfico e ilustrador de Jalisco, México. Desde 2007 trabajo con imágenes, identidad visual y diseño editorial. He creado portadas, interiores y materiales listos para impresión para proyectos editoriales, además de diseñar experiencias digitales para marcas y tiendas. Me gusta unir una mirada pictórica y narrativa con el cuidado por el detalle y la estructura. Actualmente estudio Ingeniería de Software y sigo explorando maneras de contar historias, tanto en imágenes como en libros.',
+			priceTitle: 'Precios iniciales',
+			priceLead:
+				'Cada encargo se cotiza según complejidad. El total se confirma antes del pago.',
+			extras: 'Extras y complejidad',
+			process: 'Cómo funciona',
+			fit: 'Ideal para',
+			no: 'No acepto',
+			faq: 'Preguntas frecuentes',
+			contact: 'Hablemos de tu personaje',
+			contactLead:
+				'Cuéntame la idea, tipo de encargo, pose, referencias y fecha ideal. Te responderé con presupuesto y disponibilidad.',
+			email: 'Escribir a Raptoriano',
+			designLink: 'Ver servicios de diseño en Commissions.gg',
+		}
+	: {
+			open: 'Commissions Open',
+			intro:
+				'Painterly digital illustration for expressive characters, dark fantasy, mythology and historical worlds.',
+			krita: 'The final artwork is drawn and painted by me in Krita.',
+			request: 'Request a commission',
+			prices: 'View starting prices',
+			authors: 'Author package',
+			authorTitle: 'Bring your book to life',
+			authorLead:
+				'One illustrated cover and five interior illustrations to accompany your story.',
+			authorPrice: 'From $850 USD',
+			authorTerms:
+				'Includes an illustrated cover, five black-and-white interior illustrations, and a non-exclusive commercial license for one book edition. Complexity, color, lettering, and additional formats are quoted separately.',
+			authorCta: 'Ask about the author package',
+			portfolio: 'Portfolio',
+			portfolioLead:
+				'Portraits and characters with painterly brushwork, dramatic light, and narrative presence.',
+			allWorks: 'All work',
+			filterBy: 'Filter by category',
+			details: 'View details',
+			share: 'Share',
+			close: 'Close',
+			finalArt: 'Final artwork',
+			pre2019Title: 'Images before 2019',
+			pre2019Lead:
+				'A selection of earlier visual work: editorial, institutional, children’s, and commercial.',
+			showMore: 'See more images',
+			showLess: 'Show less',
+			pre2010Title: 'Images before 2010',
+			pre2010Lead:
+				'A small visual archaeology of my earliest work, experiments, and commissions.',
+			about: 'About',
+			narrative: 'Narrative projects',
+			narrativeLead: 'Original stories available in both English and Spanish.',
+			spanish: 'Español',
+			english: 'English',
+			addLink: 'Add link',
+			aboutText:
+				'I’m César Fernando Pérez Velasco, a graphic designer and illustrator from Jalisco, Mexico. Since 2007, I’ve worked across visual design, illustration, and editorial projects. My publishing work includes complete book packages, from covers and interior layouts to print-ready files. I also bring that same care for visual storytelling, detail, and structure to digital experiences for brands and online stores. I’m currently studying Software Engineering while continuing to explore ways to tell stories through images and books.',
+			priceTitle: 'Starting prices',
+			priceLead:
+				'Every commission is quoted for its complexity. The total is confirmed before payment.',
+			extras: 'Extras and complexity',
+			process: 'How it works',
+			fit: 'Best fit',
+			no: 'Not accepting',
+			faq: 'FAQ',
+			contact: 'Tell me about your character',
+			contactLead:
+				'Share the idea, commission type, pose, references, and ideal date. I will reply with a quote and availability.',
+			email: 'Email Raptoriano',
+			designLink: 'View design services on Commissions.gg',
+		};
+const prices = es
+	? [
+			['Retrato / busto', 'Desde $85 USD', 'Rostro, hombros y expresión.'],
+			[
+				'Medio cuerpo',
+				'Desde $125 USD',
+				'Hasta la cintura, con espacio para gesto y vestuario.',
+			],
+			['Cuerpo completo', 'Desde $175 USD', 'Un personaje completo.'],
+		]
+	: [
+			['Portrait / bust', 'From $85 USD', 'Face, shoulders, and expression.'],
+			[
+				'Half body',
+				'From $125 USD',
+				'Waist-up, with room for gesture and costume.',
+			],
+			['Full body', 'From $175 USD', 'One full character.'],
+		];
+const extras = es
+	? [
+			'Personaje adicional: +75%',
+			'Fondo o ambiente detallado: desde +$60',
+			'Outfit alterno o versión nude con la misma pose: desde +40%',
+			'Uso comercial: se cotiza por separado',
+			'Armaduras, joyería, criaturas, props complejos y diseños elaborados incrementan el presupuesto.',
+		]
+	: [
+			'Additional character: +75%',
+			'Detailed background or environment: from +$60',
+			'Alternate outfit or same-pose nude version: from +40%',
+			'Commercial use: quoted separately',
+			'Armor, jewelry, creatures, complex props, and elaborate designs increase the quote.',
+		];
+const steps = es
+	? [
+			'Envía una descripción breve y referencias.',
+			'Acordamos alcance, presupuesto y fecha.',
+			'Un anticipo del 50% reserva el lugar e inicia el trabajo.',
+			'Recibes un boceto o WIP para aprobación.',
+			'Incluye dos rondas razonables de cambios durante boceto/WIP.',
+			'El saldo se paga antes de entregar el archivo final en alta resolución.',
+		]
+	: [
+			'Send a short description and references.',
+			'We agree on scope, quote, and date.',
+			'A 50% deposit reserves your slot and begins the work.',
+			'You receive a sketch or WIP for approval.',
+			'Two reasonable revisions are included during sketch/WIP.',
+			'The balance is paid before the final high-resolution file is delivered.',
+		];
+const fit = es
+	? [
+			'Personajes humanos y humanoides',
+			'Cuerpos curvy, thick y diversos',
+			'Temas históricos, antiguos y mitológicos',
+			'Fantasía oscura e imaginería pagana',
+			'Retratos expresivos y luz dramática',
+			'Desnudez sensual artística',
+			'Personajes originales',
+		]
+	: [
+			'Human and humanoid characters',
+			'Curvy, thick, and varied body types',
+			'Historical, ancient, and mythological themes',
+			'Dark fantasy and pagan imagery',
+			'Expressive portraits and dramatic lighting',
+			'Sensual artistic nudity',
+			'Original characters',
+		];
+const notAccepted = es
+	? [
+			'Mecha o maquinaria altamente técnica',
+			'Personajes furry o antropomórficos',
+			'Imitación exacta del estilo de un artista vivo',
+			'Personajes menores de edad en cualquier contexto',
+		]
+	: [
+			'Mecha or highly technical machinery',
+			'Furry / anthropomorphic characters',
+			'Exact imitation of a living artist’s style',
+			'Underage characters in any context',
+		];
+const faq = es
+	? [
+			[
+				'¿Usas IA?',
+				'La pieza final está dibujada y pintada por mí en Krita. Puedo consultar referencias auxiliares para detalles, pero nunca se incorporan a la obra final ni sustituyen el dibujo.',
+			],
+			[
+				'¿Puedes grabar un timelapse?',
+				'Sí, cuando el archivo es menor de 3000 × 3000 px. En lienzos mayores puedo compartir capturas del proceso.',
+			],
+			[
+				'¿Cuándo respondes?',
+				'Normalmente respondo de 8:00 a.m. a 6:00 p.m., hora central de Texas.',
+			],
+			[
+				'¿Cuánto tarda?',
+				'El tiempo habitual es de 2 a 4 semanas, según complejidad y fila de trabajo.',
+			],
+			[
+				'¿Qué referencias necesitas?',
+				'Imágenes del personaje, personalidad, pose, expresión, vestuario, paleta y ambiente ayudan mucho.',
+			],
+			[
+				'¿Cuántos cambios incluye?',
+				'Dos rondas razonables durante boceto o WIP; cambios grandes después de aprobar una etapa pueden requerir un cargo adicional.',
+			],
+			[
+				'¿Incluye uso comercial?',
+				'Los precios base cubren uso personal. Portadas, mercancía, publicidad, publicación o branding se cotizan según licencia y alcance.',
+			],
+			[
+				'¿Qué archivo entregas?',
+				'Una ilustración terminada en alta resolución; indica tamaño, formato o proporción antes de iniciar si la necesitas.',
+			],
+		]
+	: [
+			[
+				'Do you use AI?',
+				'The final piece is drawn and painted by me in Krita. I may consult auxiliary references for specific details, but they are never incorporated into the final artwork or used in place of drawing.',
+			],
+			[
+				'Can you record a timelapse?',
+				'Yes, for files under 3000 × 3000 px. For larger canvases I can share process screenshots instead.',
+			],
+			[
+				'What are your response hours?',
+				'I usually reply from 8:00 a.m. to 6:00 p.m., Texas Central Time.',
+			],
+			[
+				'How long does delivery take?',
+				'Typical turnaround is 2 to 4 weeks, depending on complexity and the queue.',
+			],
+			[
+				'What references should I send?',
+				'Character images, personality notes, pose, expression, outfit, palette, and mood or lighting references are helpful.',
+			],
+			[
+				'How many revisions are included?',
+				'Two reasonable rounds during sketch or WIP are included. Large changes after approval may need an extra fee.',
+			],
+			[
+				'Can I use the illustration commercially?',
+				'Base prices are for personal use. Covers, merchandise, advertising, publishing, and branding are quoted by license and scope.',
+			],
+			[
+				'What file do you deliver?',
+				'A finished high-resolution digital illustration. Tell me about required size, format, or ratio before we begin.',
+			],
+		];
+// Edit projects here: set title, category (portrait/character/narrative/study), description,
+// thumbnail, finalImage, and optional youtubeVideo (paste a YouTube watch or youtu.be URL).
+// Keep the image files separate under public/images/portfolio/.
+const portfolio = [
+	{
+		id: 'portrait-01',
+		title: es ? 'Retrato 01' : 'Portrait 01',
+		category: 'portrait',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/character-01-thumb.webp',
+		finalImage: '/images/portfolio/character-01-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'portrait-02',
+		title: es ? 'Retrato 02' : 'Portrait 02',
+		category: 'portrait',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/portrait-02-thumb.webp',
+		finalImage: '/images/portfolio/portrait-02-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'portrait-03',
+		title: es ? 'Retrato 03' : 'Portrait 03',
+		category: 'portrait',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/portrait-03-thumb.webp',
+		finalImage: '/images/portfolio/portrait-03-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'portrait-04',
+		title: es ? 'Retrato 04' : 'Portrait 04',
+		category: 'portrait',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/portrait-04-thumb.webp',
+		finalImage: '/images/portfolio/portrait-04-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'character-04',
+		title: es ? 'Personaje 04' : 'Character 04',
+		category: 'character',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/character-04-thumb.webp',
+		finalImage: '/images/portfolio/character-04-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'character-02',
+		title: es ? 'Personaje 02' : 'Character 02',
+		category: 'character',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/character-02-thumb.webp',
+		finalImage: '/images/portfolio/character-02-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'character-03',
+		title: es ? 'Personaje 03' : 'Character 03',
+		category: 'character',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/character-03-thumb.webp',
+		finalImage: '/images/portfolio/character-03-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'narrative-01',
+		title: es ? 'Escena narrativa 01' : 'Narrative scene 01',
+		category: 'narrative',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/narrative-01-thumb.webp',
+		finalImage: '/images/portfolio/narrative-01-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'narrative-02',
+		title: es ? 'Escena narrativa 02' : 'Narrative scene 02',
+		category: 'narrative',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/narrative-02-thumb.webp',
+		finalImage: '/images/portfolio/narrative-02-final.webp',
+		youtubeVideo: '',
+	},
+	{
+		id: 'study-01',
+		title: es ? 'Estudio 01' : 'Study 01',
+		category: 'study',
+		description: es
+			? 'Añade aquí la historia, técnica y detalles de la obra.'
+			: 'Add the story, technique, and artwork details here.',
+		thumbnail: '/images/portfolio/study-01-thumb.webp',
+		finalImage: '/images/portfolio/study-01-final.webp',
+		youtubeVideo: '',
+	},
 ];
-
-const links = [
-  {
-    label: isEs ? 'Novela en progreso' : 'Novel in progress',
-    url: isEs ? 'https://www.estrellababilonia.com/' : 'https://laststarbabylon.com/',
-    note: isEs ? 'Estrella de Babilonia' : 'Last Star Babylon',
-  },
-  { label: 'Portfolio', url: 'https://cara.app/raptoriano/portfolio', note: 'Cara' },
-  { label: 'DeviantArt', url: 'https://www.deviantart.com/raptoriano', note: '@raptoriano' },
-  { label: isEs ? 'Correo' : 'Email', url: 'mailto:cefev.diseno@gmail.com', note: 'cefev.diseno@gmail.com' },
+// Archive images are read directly from public/images/portfolio/pre2019.
+// The pre2010 subfolder stays hidden until the 2019 archive is expanded.
+const archiveImageFiles = (folder: string) => readdirSync(new URL(folder, import.meta.url), { withFileTypes: true })
+	.filter((entry) => entry.isFile() && ['.jpg', '.jpeg', '.png', '.webp'].includes(extname(entry.name).toLowerCase()))
+	.map((entry) => entry.name)
+	.sort((a, b) => a.localeCompare(b));
+const pre2019Files = archiveImageFiles('../../public/images/portfolio/pre2019');
+const pre2010Files = archiveImageFiles('../../public/images/portfolio/pre2019/pre2010');
+const pre2019Portfolio = pre2019Files.map((file, index) => {
+	const number = String(index + 1).padStart(2, '0');
+	const imageName = basename(file, extname(file));
+	return {
+		id: `pre2019-${number}`,
+		title: es ? `Imagen anterior ${number}` : `Earlier image ${number}`,
+		category: 'pre-2019',
+		description: es ? 'Añade el cliente, año y contexto de esta imagen.' : 'Add the client, year, and context for this image.',
+		thumbnail: `/images/portfolio/pre2019/thumbs/${imageName}.webp`,
+		finalImage: `/images/portfolio/pre2019/${file}`,
+	};
+});
+const pre2010Portfolio = pre2010Files.map((file, index) => {
+	const number = String(index + 1).padStart(2, '0');
+	const imageName = basename(file, extname(file));
+	return {
+		id: `pre2010-${number}`,
+		title: es ? `Archivo temprano ${number}` : `Early archive ${number}`,
+		category: 'pre-2010',
+		description: es ? 'Añade el cliente, año y contexto de esta imagen temprana.' : 'Add the client, year, and context for this early image.',
+		thumbnail: `/images/portfolio/pre2019/pre2010/thumbs/${imageName}.webp`,
+		finalImage: `/images/portfolio/pre2019/pre2010/${file}`,
+	};
+});
+const categories = [
+	{ id: 'all', label: c.allWorks },
+	{ id: 'portrait', label: es ? 'Retrato' : 'Portraits' },
+	{ id: 'character', label: es ? 'Personajes' : 'Characters' },
+	{ id: 'narrative', label: es ? 'Narrativo' : 'Narrative' },
+	{ id: 'study', label: es ? 'Estudios' : 'Studies' },
 ];
-
-const prices = [
-  { name: isEs ? 'Retrato / busto' : 'Portrait / bust', desc: isEs ? 'Hombros hacia arriba' : 'Shoulders and above', price: '$85 USD' },
-  { name: isEs ? 'Medio cuerpo' : 'Half body', desc: isEs ? 'Aproximadamente hasta la cintura' : 'Approximately waist-up', price: '$125 USD' },
-  { name: isEs ? 'Cuerpo completo' : 'Full body', desc: isEs ? 'Un personaje' : 'Single character', price: '$175 USD' },
+// Paste each novel's URL into its Spanish and English fields when ready.
+const narrativeProjects = [
+	{
+		id: 'blood-for-the-abi',
+		titles: { es: 'Blood for the Abi', en: 'Blood for the Abi' },
+		links: { es: '', en: '' },
+		description: es
+			? 'Novela en español e inglés. Añade aquí una breve descripción.'
+			: 'Novel in English and Spanish. Add a short description here.',
+	},
+	{
+		id: 'last-star-of-babylon',
+		titles: {
+			es: 'La última estrella de Babilonia',
+			en: 'The Last Star of Babylon',
+		},
+		links: { es: '', en: '' },
+		description: es
+			? 'Novela en español e inglés. Añade aquí una breve descripción.'
+			: 'Novel in English and Spanish. Add a short description here.',
+	},
 ];
-
-const extras = isEs
-  ? ['Personaje adicional: +75%', 'Fondo atmosférico simple: incluido', 'Fondo o ambiente detallado: desde +$60', 'Outfit alterno / versión nude con la misma pose: desde +40%', 'Uso comercial: se cotiza aparte']
-  : ['Additional character: +75%', 'Simple atmospheric background: included', 'Detailed background or environment: from +$60', 'Alternate outfit / nude version using the same pose: from +40%', 'Commercial use: quoted separately'];
-
-const fit = isEs
-  ? ['Personajes humanos y humanoides', 'Cuerpos curvy, thick y variados', 'Temas históricos, antiguos y mitológicos', 'Dark fantasy e imaginería pagana', 'Retratos expresivos', 'Luz dramática o inusual', 'Desnudez sensual y artística', 'OCs con rostros, cuerpos y personalidad distintiva']
-  : ['Human and humanoid characters', 'Curvy, thick, and varied body types', 'Historical, ancient, and mythological themes', 'Dark fantasy and pagan imagery', 'Expressive portraits', 'Dramatic or unusual lighting', 'Sensual and artistic nudity', 'Original characters with distinctive faces, bodies, and personalities'];
-
-const notAccepted = isEs
-  ? ['Mecha o maquinaria muy técnica', 'Furry / personajes antropomórficos', 'Imitación exacta del estilo de otro artista vivo', 'Personajes infantiles o menores de edad en cualquier contexto, sin excepción']
-  : ['Mecha or highly technical machinery', 'Furry / anthropomorphic characters', "Imitations of another living artist's exact style", 'Child or underage characters in any context, without exception'];
-
-const steps = isEs
-  ? ['Mándame la descripción y referencias visuales.', 'Dime si buscas retrato, medio cuerpo o cuerpo completo, con pose, mood o atmósfera.', 'Confirmo precio final y tiempo estimado.', '50% de pago para iniciar.', 'Te mando sketch/WIP para aprobación antes del render final.', 'El 50% restante se paga antes de entregar el archivo en alta resolución.']
-  : ['Send me your character description and visual references.', 'Tell me whether you want a portrait, half body, or full body illustration, with pose, mood, or atmosphere references.', "I'll confirm the final price and estimated delivery time.", '50% payment is required to begin.', "I'll send a sketch/WIP for approval before the final rendering.", 'The remaining 50% is paid before delivery of the finished high-resolution artwork.'];
-
-const faqs = isEs
-  ? [
-      {
-        question: '¿Usas IA?',
-        answer:
-          'No uso IA en la pieza final. Lo que recibes está dibujado y pintado por mí en Krita: proporciones, decisiones de composición, bordes, color y brochazos. En algunos casos puedo usar herramientas de IA solo para generar referencias auxiliares sobre detalles puntuales, como textura de joyería, telas o materiales. Esas imágenes no se incorporan directamente a la obra ni sustituyen el dibujo; funcionan como referencia visual, igual que cualquier carpeta de referencias. Mi prioridad es mantener control total sobre la pieza para que se vea como el cliente y yo acordamos.',
-      },
-      {
-        question: '¿Puedes grabar un timelapse del dibujo?',
-        answer:
-          'Sí, puedo grabar timelapse cuando el archivo mide menos de 3000 x 3000 pixeles. Si el canvas es más grande, se vuelve complicado por memoria y rendimiento de la computadora. En esos casos puedo enviarte capturas del proceso si quieres documentar el avance.',
-      },
-      {
-        question: '¿Cuál es tu horario de atención?',
-        answer:
-          'Respondo mensajes de 8:00 a.m. a 6:00 p.m., hora central de Texas. Si estás en Guadalajara o en otra zona horaria, confirmo horarios por mensaje para evitar confusiones con cambios de horario.',
-      },
-      {
-        question: '¿Cuántos días tardas en entregar?',
-        answer:
-          'El tiempo normal de entrega es de 2 a 4 semanas, dependiendo de la complejidad de la pieza y de la fila de comisiones activa. Si necesitas una fecha específica, dímelo desde el inicio para revisar si es viable.',
-      },
-      {
-        question: '¿Qué referencias necesito mandar?',
-        answer:
-          'Lo ideal es enviar imágenes del personaje, descripción de personalidad, pose, expresión, vestuario, paleta de color y ejemplos de atmósfera o iluminación. No necesitas tener todo perfecto: mientras más claro sea el punto de partida, mejor puedo cotizar y pintar.',
-      },
-      {
-        question: '¿Cuántos cambios incluye la comisión?',
-        answer:
-          'Incluyo dos rondas razonables de ajustes durante las etapas de sketch o WIP. Cambios grandes después de aprobar una etapa pueden requerir costo adicional, sobre todo si implican rehacer pose, composición, vestuario o fondo.',
-      },
-      {
-        question: '¿Puedo usar la ilustración comercialmente?',
-        answer:
-          'El precio base cubre uso personal. Portadas, mercancía, publicidad, publicaciones, branding o cualquier proyecto comercial se cotizan aparte según el uso y alcance de la licencia.',
-      },
-      {
-        question: '¿Qué archivo entregas?',
-        answer:
-          'Entrego la ilustración digital terminada en alta resolución. Si necesitas un tamaño, formato o proporción específica, avísame antes de iniciar para preparar el canvas correctamente.',
-      },
-    ]
-  : [
-      {
-        question: 'Do you use AI?',
-        answer:
-          'I do not use AI in the final artwork. The piece you receive is drawn and painted by me in Krita: proportions, composition choices, edges, color, and brushwork. In some cases I may use AI tools only to create auxiliary references for specific details, such as jewelry texture, fabric, or materials. Those images are not incorporated directly into the artwork and do not replace the drawing; they function as visual reference, like any reference board. My priority is to keep full control over the piece so it looks exactly like the client and I agreed.',
-      },
-      {
-        question: 'Can you record a timelapse?',
-        answer:
-          'Yes, I can record a timelapse when the file is under 3000 x 3000 pixels. If the canvas is larger, recording becomes difficult because of memory and computer performance. In those cases I can send process screenshots instead.',
-      },
-      {
-        question: 'What are your response hours?',
-        answer:
-          'I answer messages from 8:00 a.m. to 6:00 p.m., Texas Central Time. If you are in Guadalajara or another time zone, I will confirm timing by message to avoid daylight-saving confusion.',
-      },
-      {
-        question: 'How long does delivery take?',
-        answer:
-          'Typical turnaround is 2 to 4 weeks, depending on complexity and the current commission queue. If you need a specific deadline, tell me at the beginning so I can confirm whether it is realistic.',
-      },
-      {
-        question: 'What references should I send?',
-        answer:
-          'Ideally, send character images, personality notes, pose, expression, outfit, color palette, and examples of mood or lighting. It does not need to be perfect: the clearer the starting point, the better I can quote and paint.',
-      },
-      {
-        question: 'How many revisions are included?',
-        answer:
-          'Two reasonable rounds of adjustments are included during the sketch or WIP stages. Large changes after an approved stage may require an additional fee, especially if they involve reworking the pose, composition, outfit, or background.',
-      },
-      {
-        question: 'Can I use the illustration commercially?',
-        answer:
-          'Base prices cover personal use. Book covers, merchandise, advertising, publishing, branding, or any other commercial project are quoted separately according to the use and license scope.',
-      },
-      {
-        question: 'What file do you deliver?',
-        answer:
-          'I deliver the finished digital illustration in high resolution. If you need a specific size, format, or aspect ratio, please tell me before we begin so I can set up the canvas correctly.',
-      },
-    ];
-
-const gallery = [
-  { src: '/images/placeholders/commission-hero-1045x765.jpg', label: 'commission-hero', size: '1045 x 765' },
-  { src: '/images/placeholders/portrait-862x927.jpg', label: 'portrait', size: '862 x 927' },
-  { src: '/images/placeholders/book-cover-wip-830x963.jpg', label: 'book-cover-wip', size: '830 x 963' },
-  { src: '/images/placeholders/doodle-sketch-730x810.jpg', label: 'doodle-sketch', size: '730 x 810' },
-  { src: '/images/placeholders/zohra-sketch-827x1540.jpg', label: 'zohra-sketch', size: '827 x 1540' },
-];
+const storyLanguages = ['es', 'en'] as const;
 ---
 
-<section class="commission-home">
-  <div class="rain" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
-
-  <div class="language">
-    <a href={locale === 'es' ? '/en/' : '/es/'}>{locale === 'es' ? 'EN' : 'ES'}</a>
-  </div>
-
-  <div class="hero">
-    <div class="lace lace-top" aria-hidden="true"></div>
-    <p class="eyebrow">{copy.eyebrow}</p>
-    <div class="crest">
-      <div>
-        <span>{copy.role}</span>
-        <strong>{copy.title}</strong>
-      </div>
-    </div>
-    <p class="status">{copy.status}</p>
-    <p class="intro">{copy.intro}</p>
-    <p class="krita">{copy.krita}</p>
-    <div class="actions">
-      <a class="primary" href="mailto:cefev.diseno@gmail.com">{copy.cta}</a>
-      <a class="secondary" href="#prices">{copy.pricesTitle}</a>
-    </div>
-    <div class="hero-links" aria-label={copy.linksTitle}>
-      <div class="socials">
-        {socials.map((social) => (
-          <a href={social.url} target="_blank" rel="noopener">{social.label}</a>
-        ))}
-      </div>
-      <div class="hero-link-grid">
-        {links.map((link) => (
-          <a href={link.url} target={link.url.startsWith('http') ? '_blank' : '_self'} rel={link.url.startsWith('http') ? 'noopener' : undefined}>
-            <span>{link.label}</span>
-            <small>{link.note}</small>
-          </a>
-        ))}
-      </div>
-    </div>
-    <div class="lace lace-bottom" aria-hidden="true"></div>
-  </div>
-
-  <div class="content-shell">
-    <section id="prices" class="panel prices-panel">
-      <div class="section-heading">
-        <p>{copy.status}</p>
-        <h2>{copy.pricesTitle}</h2>
-      </div>
-      <div class="price-grid">
-        {prices.map((item) => (
-          <article class="price-card">
-            <p>{item.name}</p>
-            <span>{item.desc}</span>
-            <strong>{item.price}</strong>
-          </article>
-        ))}
-      </div>
-      <p class="fine-print">
-        {isEs
-          ? 'Diseños complejos, props elaborados, armadura, joyería, criaturas o ambientes muy detallados pueden subir el precio. Siempre confirmo el total antes del pago.'
-          : 'Complex designs, elaborate props, armor, jewelry, creatures, or highly detailed environments may increase the final price. I will always confirm the total before payment.'}
-      </p>
-    </section>
-
-    <section class="panel two-columns">
-      <div>
-        <h2>{copy.extrasTitle}</h2>
-        <ul>{extras.map((item) => <li>{item}</li>)}</ul>
-      </div>
-      <div>
-        <h2>{copy.howTitle}</h2>
-        <ol>{steps.map((item) => <li>{item}</li>)}</ol>
-      </div>
-    </section>
-
-    <section class="panel two-columns">
-      <div>
-        <h2>{copy.fitTitle}</h2>
-        <ul>{fit.map((item) => <li>{item}</li>)}</ul>
-      </div>
-      <div>
-        <h2>{copy.noTitle}</h2>
-        <ul>{notAccepted.map((item) => <li>{item}</li>)}</ul>
-      </div>
-    </section>
-
-    <section class="panel faq-panel">
-      <div class="section-heading">
-        <p>{copy.status}</p>
-        <h2>{copy.faqTitle}</h2>
-      </div>
-      <div class="faq-list">
-        {faqs.map((item) => (
-          <details>
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
-      </div>
-    </section>
-
-    <section class="gallery-section">
-      <div class="section-heading">
-        <p>{copy.galleryNote}</p>
-        <h2>{copy.galleryTitle}</h2>
-      </div>
-      <div class="gallery">
-        {gallery.map((item) => (
-          <figure>
-            <img src={item.src} alt={item.label} loading="lazy" />
-            <figcaption>{item.label} · {item.size}</figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
-  </div>
-</section>
-
-<style>
-  :global(html) {
-    background: #111216;
-  }
-
-  .commission-home {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    color: #f5f1f4;
-    background:
-      linear-gradient(90deg, rgba(229, 239, 245, 0.82) 0%, rgba(77, 82, 95, 0.66) 36%, rgba(17, 18, 22, 0.82) 100%),
-      linear-gradient(180deg, rgba(16, 17, 22, 0.22), rgba(16, 17, 22, 0.96)),
-      url('/images/placeholders/commission-hero-1045x765.jpg') center top / cover fixed;
-    font-family: var(--font-body);
-  }
-
-  .language {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 5;
-  }
-
-  .language a {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.38);
-    border-radius: 50%;
-    color: #fff;
-    background: rgba(18, 19, 24, 0.28);
-    text-decoration: none;
-    backdrop-filter: blur(10px);
-  }
-
-  .rain {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.55;
-    z-index: 1;
-  }
-
-  .rain span {
-    position: absolute;
-    top: -12vh;
-    width: 1px;
-    height: 180px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.82));
-    transform: rotate(13deg);
-    animation: rain-fall 5s linear infinite;
-  }
-
-  .rain span:nth-child(1) { left: 12%; animation-delay: 0s; }
-  .rain span:nth-child(2) { left: 28%; animation-delay: 1.6s; height: 130px; }
-  .rain span:nth-child(3) { left: 45%; animation-delay: 0.8s; }
-  .rain span:nth-child(4) { left: 63%; animation-delay: 2.5s; height: 150px; }
-  .rain span:nth-child(5) { left: 78%; animation-delay: 1.1s; }
-  .rain span:nth-child(6) { left: 91%; animation-delay: 3.3s; height: 120px; }
-
-  @keyframes rain-fall {
-    to {
-      transform: translateY(125vh) rotate(13deg);
-    }
-  }
-
-  .hero,
-  .content-shell {
-    position: relative;
-    z-index: 2;
-  }
-
-  .hero {
-    min-height: 88vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 72px 24px 52px;
-    text-align: center;
-  }
-
-  .eyebrow,
-  .section-heading p {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.74);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-  }
-
-  .crest {
-    width: min(292px, 70vw);
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
-    border: 2px solid rgba(245, 241, 244, 0.86);
-    border-radius: 50% 50% 46% 46%;
-    box-shadow:
-      inset 0 0 0 8px rgba(255, 255, 255, 0.08),
-      0 18px 70px rgba(0, 0, 0, 0.34);
-    background: rgba(25, 27, 34, 0.2);
-    backdrop-filter: blur(6px);
-  }
-
-  .crest div {
-    display: grid;
-    gap: 14px;
-  }
-
-  .crest span {
-    font-family: var(--font-display);
-    font-size: clamp(1.35rem, 5vw, 2rem);
-    text-transform: uppercase;
-  }
-
-  .crest strong {
-    color: #f4b9d2;
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 5vw, 2.15rem);
-    font-weight: 600;
-  }
-
-  .status,
-  .intro,
-  .krita,
-  .fine-print {
-    margin: 0;
-    max-width: 680px;
-    color: rgba(255, 255, 255, 0.86);
-    font-size: 1.16rem;
-    line-height: 1.55;
-  }
-
-  .krita,
-  .fine-print {
-    color: rgba(255, 255, 255, 0.68);
-    font-style: italic;
-  }
-
-  .actions,
-  .socials {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .actions a,
-  .socials a,
-  .hero-link-grid a {
-    text-decoration: none;
-  }
-
-  .primary,
-  .secondary,
-  .socials a {
-    min-height: 46px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    padding: 0 18px;
-    border: 1px solid rgba(255, 255, 255, 0.34);
-    color: #fff;
-    background: rgba(255, 255, 255, 0.11);
-    backdrop-filter: blur(10px);
-  }
-
-  .primary {
-    border-color: rgba(246, 185, 212, 0.75);
-    background: rgba(246, 185, 212, 0.2);
-  }
-
-  .hero-links {
-    width: min(760px, 100%);
-    display: grid;
-    gap: 10px;
-    margin-top: 2px;
-  }
-
-  .socials a {
-    min-height: 36px;
-    padding: 0 13px;
-    border-radius: 999px;
-    font-size: 0.88rem;
-  }
-
-  .hero-link-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .hero-link-grid a {
-    min-height: 58px;
-    display: grid;
-    align-content: center;
-    gap: 2px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 10px 12px;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-  }
-
-  .hero-link-grid span {
-    font-family: var(--font-display);
-    font-size: 0.96rem;
-  }
-
-  .hero-link-grid small {
-    color: rgba(255, 255, 255, 0.66);
-    font-size: 0.76rem;
-  }
-
-  .lace {
-    width: min(760px, 82vw);
-    height: 32px;
-    opacity: 0.82;
-    background:
-      radial-gradient(circle at 20px 50%, transparent 0 10px, rgba(255, 255, 255, 0.82) 11px 12px, transparent 13px),
-      radial-gradient(circle at 52px 50%, transparent 0 10px, rgba(255, 255, 255, 0.82) 11px 12px, transparent 13px);
-    background-size: 64px 32px;
-    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
-  }
-
-  .content-shell {
-    width: min(1120px, calc(100% - 32px));
-    margin: 0 auto;
-    padding: 12px 0 84px;
-    display: grid;
-    gap: 18px;
-  }
-
-  .panel,
-  .gallery-section {
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 8px;
-    background: rgba(18, 19, 24, 0.68);
-    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
-    backdrop-filter: blur(14px);
-    padding: clamp(22px, 4vw, 38px);
-  }
-
-  .section-heading {
-    display: grid;
-    gap: 4px;
-    margin-bottom: 20px;
-  }
-
-  h2 {
-    margin: 0 0 16px;
-    padding: 0;
-    border: 0;
-    color: #f8f4f7;
-    font-size: clamp(1.45rem, 4vw, 2rem);
-  }
-
-  .section-heading h2 {
-    margin-bottom: 0;
-  }
-
-  .price-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .price-card {
-    min-height: 164px;
-    display: grid;
-    align-content: space-between;
-    gap: 12px;
-    padding: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.07);
-  }
-
-  .price-card p,
-  .price-card span,
-  .price-card strong {
-    margin: 0;
-  }
-
-  .price-card p {
-    color: #f8f4f7;
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-  }
-
-  .price-card span {
-    color: rgba(255, 255, 255, 0.68);
-  }
-
-  .price-card strong {
-    color: #f6b9d4;
-    font-family: var(--font-display);
-    font-size: 1.65rem;
-  }
-
-  .fine-print {
-    margin-top: 18px;
-  }
-
-  .two-columns {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 28px;
-  }
-
-  ul,
-  ol {
-    margin: 0;
-    padding-left: 1.1rem;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 1.08rem;
-    line-height: 1.58;
-  }
-
-  li + li {
-    margin-top: 10px;
-  }
-
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .faq-list {
-    display: grid;
-    gap: 10px;
-  }
-
-  details {
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.06);
-  }
-
-  summary {
-    cursor: pointer;
-    padding: 16px 18px;
-    color: #f8f4f7;
-    font-family: var(--font-display);
-    font-size: 1.12rem;
-  }
-
-  details p {
-    margin: 0;
-    padding: 0 18px 18px;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 1.08rem;
-    line-height: 1.62;
-  }
-
-  figure {
-    margin: 0;
-  }
-
-  figure img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    display: block;
-    border-radius: 8px;
-  }
-
-  figcaption {
-    margin-top: 8px;
-    color: rgba(255, 255, 255, 0.66);
-    font-size: 0.78rem;
-  }
-
-  @media (max-width: 760px) {
-    .commission-home {
-      background-attachment: scroll;
-      background-position: 58% top;
-    }
-
-    .hero {
-      min-height: auto;
-      padding-top: 86px;
-    }
-
-    .price-grid,
-    .two-columns,
-    .gallery {
-      grid-template-columns: 1fr;
-    }
-
-    .hero-link-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .gallery {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 460px) {
-    .actions a,
-    .socials a {
-      width: 100%;
-    }
-
-    .hero-link-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .gallery {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
+<main class="commission-home">
+	<header class="site-header">
+		<a
+			class="wordmark"
+			href={'/' + locale + '/'}>
+			<img
+				class="siteLogo"
+				src="/images/interface/RaptorianoLogo-b.webp"
+			/>
+		</a>
+		<nav aria-label={es ? 'Navegación de comisiones' : 'Commission navigation'}>
+			<a href="#portfolio">{es ? 'Portafolio' : 'Portfolio'}</a><a href="#about"
+				>{c.about}</a
+			><a href="#narrative">{c.narrative}</a><a href="#prices"
+				>{es ? 'Precios' : 'Prices'}</a
+			><a href="#authors">{c.authors}</a><a href="#process"
+				>{es ? 'Proceso' : 'Process'}</a
+			><a href="#faq">FAQ</a><a href="#contact">{es ? 'Contacto' : 'Contact'}</a
+			>
+		</nav><a
+			class="locale"
+			href={es ? '/en/' : '/es/'}
+			>{es ? 'EN' : 'ES'}</a
+		>
+	</header>
+	<section
+		class="hero"
+		aria-labelledby="hero-title">
+		<div>
+			<p class="eyebrow">{c.open}</p><h1 id="hero-title">Raptoriano</h1><p
+				class="intro">
+				{c.intro}
+			</p><p class="krita">{c.krita}</p><div class="actions">
+				<a
+					class="button primary"
+					href="#contact"
+					>{c.request}</a
+				><a
+					class="button"
+					href="#prices"
+					>{c.prices}</a
+				>
+			</div>
+		</div>
+	</section>
+	<div class="shell">
+		<section
+			id="portfolio"
+			class="section portfolio"
+			data-projects={JSON.stringify([...portfolio, ...pre2019Portfolio, ...pre2010Portfolio])}
+			data-categories={JSON.stringify(categories)}
+			data-copy={JSON.stringify({
+				close: c.close,
+				share: c.share,
+				copied: es ? 'Enlace copiado' : 'Link copied',
+			})}>
+			<div class="heading">
+				<p>{c.portfolioLead}</p><h2>{c.portfolio}</h2>
+			</div><div class="portfolio-tools">
+				<span>{c.filterBy}</span><div
+					class="portfolio-filters"
+					role="group"
+					aria-label={c.filterBy}>
+					{
+						categories.map((category) => (
+							<button
+								class="filter-button"
+								type="button"
+								data-filter={category.id}
+								aria-pressed={category.id === 'all' ? 'true' : 'false'}>
+								{category.label}
+							</button>
+						))
+					}
+				</div>
+			</div><div class="portfolio-grid">
+				{
+					portfolio.map((piece) => (
+						<article
+							id={piece.id}
+							class="portfolio-card"
+							data-category={piece.category}>
+							<>
+								<button
+									class="portfolio-open"
+									type="button"
+									data-project={piece.id}
+									aria-label={`${c.details}: ${piece.title}`}>
+									<>
+										<img
+											src={piece.thumbnail}
+											alt={`${piece.title} thumbnail`}
+											loading="lazy"
+										/>
+										<span class="portfolio-overlay">
+											{c.details}
+											<span aria-hidden="true">↗</span>
+										</span>
+									</>
+								</button>
+								<div class="portfolio-card-meta">
+									<>
+										<div>
+											<>
+												<h3>{piece.title}</h3>
+												<span class="category-label">
+													{
+														categories.find(
+															(category) => category.id === piece.category,
+														)?.label
+													}
+												</span>
+											</>
+										</div>
+										<button
+											class="share-button"
+											type="button"
+											data-share={piece.id}
+											aria-label={`${c.share}: ${piece.title}`}
+											title={c.share}>
+											↗
+										</button>
+									</>
+								</div>
+							</>
+						</article>
+					))
+				}
+			</div><section class="pre2019-section" aria-labelledby="pre2019-title">
+				<div class="pre2019-heading"><div><p class="eyebrow">{es ? 'Archivo' : 'Archive'}</p><h3 id="pre2019-title">{c.pre2019Title}</h3><p>{c.pre2019Lead}</p></div></div>
+				<div class="portfolio-grid archive-grid pre2019-grid">
+					{pre2019Portfolio.map((piece, index) => <article id={piece.id} class="portfolio-card pre2019-card" data-archive-card="pre2019" hidden={index > 5}><button class="portfolio-open" type="button" data-project={piece.id} aria-label={`${c.details}: ${piece.title}`}><img src={piece.thumbnail} alt={`${piece.title} thumbnail`} loading="lazy" /><span class="portfolio-overlay">{c.details}<span aria-hidden="true">↗</span></span></button><div class="portfolio-card-meta"><div><h3>{piece.title}</h3><span class="category-label">{es ? 'Antes de 2019' : 'Before 2019'}</span></div><button class="share-button" type="button" data-share={piece.id} aria-label={`${c.share}: ${piece.title}`} title={c.share}>↗</button></div></article>)}
+				</div><button class="button pre2019-toggle" type="button" data-archive-toggle="pre2019" data-show-more={c.showMore} data-show-less={c.showLess} aria-expanded="false">{c.showMore}</button>
+			</section><section class="pre2019-section pre2010-section" data-pre2010-section aria-labelledby="pre2010-title" hidden>
+				<div class="pre2019-heading"><div><p class="eyebrow">{es ? 'Archivo temprano' : 'Early archive'}</p><h3 id="pre2010-title">{c.pre2010Title}</h3><p>{c.pre2010Lead}</p></div></div>
+				<div class="portfolio-grid archive-grid pre2010-grid">
+					{pre2010Portfolio.map((piece, index) => <article id={piece.id} class="portfolio-card pre2019-card pre2010-card" data-archive-card="pre2010" hidden={index > 5}><button class="portfolio-open" type="button" data-project={piece.id} aria-label={`${c.details}: ${piece.title}`}><img src={piece.thumbnail} alt={`${piece.title} thumbnail`} loading="lazy" /><span class="portfolio-overlay">{c.details}<span aria-hidden="true">↗</span></span></button><div class="portfolio-card-meta"><div><h3>{piece.title}</h3><span class="category-label">{es ? 'Antes de 2010' : 'Before 2010'}</span></div><button class="share-button" type="button" data-share={piece.id} aria-label={`${c.share}: ${piece.title}`} title={c.share}>↗</button></div></article>)}
+				</div><button class="button pre2019-toggle" type="button" data-archive-toggle="pre2010" data-show-more={c.showMore} data-show-less={c.showLess} aria-expanded="false">{c.showMore}</button>
+			</section><dialog
+				class="portfolio-dialog"
+				aria-labelledby="dialog-title">
+				<button
+					class="dialog-close"
+					type="button"
+					aria-label={c.close}
+					>×</button
+				><div class="dialog-layout">
+					<img
+						class="dialog-image"
+						src=""
+						alt=""
+					/><div class="dialog-copy">
+						<p class="eyebrow dialog-category"></p><h2 id="dialog-title"></h2><p
+							class="dialog-description">
+						</p><div class="youtube-video" hidden><iframe
+							title=""
+							src=""
+							loading="lazy"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen></iframe></div><a
+							class="button"
+							href=""
+							download
+							>{c.finalArt}</a
+						>
+					</div>
+				</div>
+			</dialog>
+		</section>
+		<section
+			id="about"
+			class="section about-section">
+			<div class="about-panel">
+				<p class="eyebrow">{c.about}</p><h2>{c.about}</h2><p>{c.aboutText}</p><p
+					class="about-signature">
+					César Fernando Pérez Velasco <span>— Raptoriano</span>
+				</p>
+			</div>
+		</section>
+		<section
+			id="narrative"
+			class="section narrative-section">
+			<div class="heading">
+				<p>{c.narrativeLead}</p><h2>{c.narrative}</h2>
+			</div><div class="narrative-grid">
+				{
+					narrativeProjects.map((project) => (
+						<article class="narrative-card">
+							<>
+								<p class="eyebrow">{es ? 'Novela' : 'Novel'}</p>
+								<h3>{project.titles[locale === 'es' ? 'es' : 'en']}</h3>
+								<p>{project.description}</p>
+								<div class="novel-links">
+									{storyLanguages.map((language) =>
+										project.links[language] ? (
+											<a
+												class="button"
+												href={project.links[language]}
+												target="_blank"
+												rel="noopener noreferrer">
+												{language === 'es' ? c.spanish : c.english} ↗
+											</a>
+										) : (
+											<span class="link-placeholder">
+												{language === 'es' ? c.spanish : c.english}: {c.addLink}
+											</span>
+										),
+									)}
+								</div>
+							</>
+						</article>
+					))
+				}
+			</div>
+		</section>
+		<section
+			id="prices"
+			class="section">
+			<div class="heading"><p>{c.priceLead}</p><h2>{c.priceTitle}</h2></div><div
+				class="cards">
+				{
+					prices.map(([name, price, detail]) => (
+						<article>
+							<>
+								<h3>{name}</h3>
+								<p>{detail}</p>
+								<strong>{price}</strong>
+							</>
+						</article>
+					))
+				}
+			</div>
+		</section>
+		<section
+			id="authors"
+			class="section author-package">
+			<div class="heading">
+				<p>{c.authorLead}</p><h2>{c.authorTitle}</h2>
+			</div><article class="author-card">
+				<div><h3>{c.authors}</h3><p>{c.authorTerms}</p></div><strong
+					>{c.authorPrice}</strong
+				><a
+					class="button primary"
+					href={`mailto:cefev.diseno@gmail.com?subject=${encodeURIComponent(es ? 'Paquete de ilustración para libro' : 'Book illustration package')}`}
+					>{c.authorCta}</a
+				>
+			</article>
+		</section>
+		<section class="section split">
+			<div>
+				<h2>{c.extras}</h2><ul>{extras.map((item) => <li>{item}</li>)}</ul>
+			</div><aside class="notice">
+				<p>{es ? 'Antes de pagar' : 'Before payment'}</p><strong
+					>{
+						es
+							? 'El presupuesto final siempre se confirma contigo antes de solicitar el pago.'
+							: 'The final quote is always confirmed with you before payment is requested.'
+					}</strong
+				>
+			</aside>
+		</section>
+		<section
+			id="process"
+			class="section">
+			<h2>{c.process}</h2><ol class="steps">
+				{
+					steps.map((step, index) => (
+						<li>
+							<span>{String(index + 1).padStart(2, '0')}</span>
+							{step}
+						</li>
+					))
+				}
+			</ol>
+		</section>
+		<section class="section split">
+			<div>
+				<h2>{c.fit}</h2><ul>{fit.map((item) => <li>{item}</li>)}</ul>
+			</div><div>
+				<h2>{c.no}</h2><ul>{notAccepted.map((item) => <li>{item}</li>)}</ul>
+			</div>
+		</section>
+		<section
+			id="faq"
+			class="section faq">
+			<h2>{c.faq}</h2>{
+				faq.map(([question, answer]) => (
+					<details>
+						<>
+							<summary>{question}</summary>
+							<p>{answer}</p>
+						</>
+					</details>
+				))
+			}
+		</section>
+		<section
+			id="contact"
+			class="section contact">
+			<div>
+				<p class="eyebrow">{c.open}</p><h2>{c.contact}</h2><p>
+					{c.contactLead}
+				</p><a
+					class="button primary"
+					href="mailto:cefev.diseno@gmail.com"
+					>{c.email}</a
+				>
+			</div><aside>
+				<h3>Book and publishing design</h3><p>
+					Custom title logos, ebook covers and KDP formatting are available as
+					separate design services.
+				</p><a
+					href="https://www.commissions.gg/raptoriano"
+					target="_blank"
+					rel="noopener noreferrer"
+					>{c.designLink}</a
+				>
+			</aside>
+		</section>
+	</div>
+</main>
+<script>
+	const section = document.querySelector<HTMLElement>(
+		'#portfolio[data-projects]',
+	);
+	if (section) {
+		const projects = JSON.parse(section.dataset.projects ?? '[]') as Array<{
+			id: string;
+			title: string;
+			category: string;
+			description: string;
+			finalImage: string;
+			youtubeVideo?: string;
+		}>;
+		const categories = JSON.parse(section.dataset.categories ?? '[]') as Array<{
+			id: string;
+			label: string;
+		}>;
+		const copy = JSON.parse(section.dataset.copy ?? '{}') as {
+			close: string;
+			share: string;
+			copied: string;
+		};
+		const dialog =
+			section.querySelector<HTMLDialogElement>('.portfolio-dialog');
+		const image = dialog?.querySelector<HTMLImageElement>('.dialog-image');
+		const title = dialog?.querySelector<HTMLElement>('#dialog-title');
+		const description = dialog?.querySelector<HTMLElement>(
+			'.dialog-description',
+		);
+		const category = dialog?.querySelector<HTMLElement>('.dialog-category');
+		const finalLink = dialog?.querySelector<HTMLAnchorElement>(
+			'.dialog-copy .button',
+		);
+		const videoBox = dialog?.querySelector<HTMLElement>('.youtube-video');
+		const videoFrame = videoBox?.querySelector<HTMLIFrameElement>('iframe');
+
+		section
+			.querySelectorAll<HTMLButtonElement>('[data-filter]')
+			.forEach((filter) => {
+				filter.addEventListener('click', () => {
+					const selected = filter.dataset.filter;
+					section
+						.querySelectorAll<HTMLButtonElement>('[data-filter]')
+						.forEach((button) =>
+							button.setAttribute('aria-pressed', String(button === filter)),
+						);
+					section
+						.querySelectorAll<HTMLElement>('.portfolio-card')
+						.forEach((card) => {
+							card.hidden =
+								selected !== 'all' && card.dataset.category !== selected;
+						});
+				});
+			});
+
+		section
+			.querySelectorAll<HTMLButtonElement>('[data-archive-toggle]')
+			.forEach((button) => {
+				button.addEventListener('click', () => {
+					const expanded = button.getAttribute('aria-expanded') === 'true';
+					const archive = button.dataset.archiveToggle;
+					section
+						.querySelectorAll<HTMLElement>(`[data-archive-card="${archive}"]`)
+						.forEach((card, index) => { card.hidden = !expanded && index > 5; });
+					button.setAttribute('aria-expanded', String(!expanded));
+					button.textContent = expanded ? button.dataset.showMore ?? '' : button.dataset.showLess ?? '';
+					if (archive === 'pre2019') {
+						const pre2010Section = section.querySelector<HTMLElement>('[data-pre2010-section]');
+						if (pre2010Section) pre2010Section.hidden = expanded;
+					}
+				});
+			});
+
+		section
+			.querySelectorAll<HTMLButtonElement>('[data-project]')
+			.forEach((button) => {
+				button.addEventListener('click', () => {
+					const project = projects.find(
+						(item) => item.id === button.dataset.project,
+					);
+					if (
+						!project ||
+						!dialog ||
+						!image ||
+						!title ||
+						!description ||
+						!category ||
+						!finalLink
+					)
+						return;
+					image.src = project.finalImage;
+					image.alt = project.title;
+					title.textContent = project.title;
+					description.textContent = project.description;
+					category.textContent =
+						categories.find((item) => item.id === project.category)?.label ??
+						project.category;
+					finalLink.href = project.finalImage;
+					const videoId = getYouTubeVideoId(project.youtubeVideo ?? '');
+					if (videoBox && videoFrame && videoId) {
+						videoFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
+						videoFrame.title = `${project.title} speedpainting`;
+						videoBox.hidden = false;
+					} else if (videoBox && videoFrame) {
+						videoFrame.removeAttribute('src');
+						videoBox.hidden = true;
+					}
+					dialog.showModal();
+				});
+			});
+
+		dialog
+			?.querySelector<HTMLButtonElement>('.dialog-close')
+			?.addEventListener('click', () => dialog.close());
+		dialog?.addEventListener('click', (event) => {
+			if (event.target === dialog) dialog.close();
+		});
+		dialog?.addEventListener('close', () => videoFrame?.removeAttribute('src'));
+
+		section
+			.querySelectorAll<HTMLButtonElement>('[data-share]')
+			.forEach((button) => {
+				button.addEventListener('click', async () => {
+					const project = projects.find(
+						(item) => item.id === button.dataset.share,
+					);
+					if (!project) return;
+					const url = new URL(
+						`#${project.id}`,
+						window.location.href,
+					).toString();
+					if (navigator.share) {
+						try {
+							await navigator.share({
+								title: project.title,
+								text: project.description,
+								url,
+							});
+						} catch (error) {
+							if (error instanceof Error && error.name !== 'AbortError')
+								console.error(error);
+						}
+					} else if (navigator.clipboard) {
+						await navigator.clipboard.writeText(url);
+						button.setAttribute('aria-label', copy.copied);
+						button.title = copy.copied;
+						window.setTimeout(() => {
+							button.setAttribute(
+								'aria-label',
+								`${copy.share}: ${project.title}`,
+							);
+							button.title = copy.share;
+						}, 1800);
+					}
+				});
+			});
+	}
+
+	function getYouTubeVideoId(value: string): string | null {
+		try {
+			const url = new URL(value);
+			const host = url.hostname.replace(/^www\./, '');
+			let id = '';
+			if (host === 'youtu.be') id = url.pathname.slice(1).split('/')[0] ?? '';
+			else if (host === 'youtube.com' || host === 'm.youtube.com' || host === 'youtube-nocookie.com') {
+				id = url.searchParams.get('v') ?? url.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1] ?? '';
+			}
+			return /^[\w-]{11}$/.test(id) ? id : null;
+		} catch {
+			return null;
+		}
+	}
+</script>

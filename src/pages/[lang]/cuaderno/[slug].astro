@@ -12,7 +12,6 @@ export async function getStaticPaths() {
     slugMap.get(s)!.push(entry);
   }
   return Array.from(slugMap.entries())
-    .filter(([slug]) => slug !== 'religion-solar-lunar')
     .flatMap(([slug, related]) => [
       { params: { lang: 'es', slug }, props: { related } },
       { params: { lang: 'en', slug }, props: { related } },
