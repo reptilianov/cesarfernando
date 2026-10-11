@@ -32,7 +32,6 @@ const c = es
 			details: 'Ver detalles',
 			share: 'Compartir',
 			close: 'Cerrar',
-			finalArt: 'Imagen final',
 			pre2019Title: 'Imágenes previas a 2019',
 			pre2019Lead:
 				'Una selección de trabajo visual anterior: editorial, institucional, infantil y comercial.',
@@ -87,7 +86,6 @@ const c = es
 			details: 'View details',
 			share: 'Share',
 			close: 'Close',
-			finalArt: 'Final artwork',
 			pre2019Title: 'Images before 2019',
 			pre2019Lead:
 				'A selection of earlier visual work: editorial, institutional, children’s, and commercial.',
@@ -393,14 +391,37 @@ const archiveImageFiles = (folder: string) => readdirSync(new URL(folder, import
 	.sort((a, b) => a.localeCompare(b));
 const pre2019Files = archiveImageFiles('../../public/images/portfolio/pre2019');
 const pre2010Files = archiveImageFiles('../../public/images/portfolio/pre2019/pre2010');
+const pre2019Metadata: Record<string, { titles: { es: string; en: string }; descriptions: { es: string; en: string } }> = {
+	'616444735_18163454371403675_477673644611328108_n.jpg': { titles: { es: 'Pintor', en: 'Painter' }, descriptions: { es: 'Ilustración editorial de un pintor con una paleta de colores.', en: 'Editorial illustration of a painter holding a color palette.' } },
+	'618875425_18124441690528160_5399555057546653070_n.jpg': { titles: { es: 'Trofeo Google', en: 'Google Trophy' }, descriptions: { es: 'Ilustración gráfica de un trofeo con la identidad visual de Google.', en: 'Graphic illustration of a trophy featuring Google branding.' } },
+	'619147337_18099182467881168_6224745508823702925_n.jpg': { titles: { es: 'Gato lector', en: 'Reading Cat' }, descriptions: { es: 'Personaje infantil de un gato sentado sobre una pila de libros.', en: 'Children’s character illustration of a cat sitting on a stack of books.' } },
+	'619833782_18114385564533882_8230435331429948184_n.jpg': { titles: { es: 'Dragón rojo', en: 'Red Dragon' }, descriptions: { es: 'Ilustración de un dragón rojo en un lenguaje gráfico de alto contraste.', en: 'Red dragon illustration in a high-contrast graphic style.' } },
+	'620894016_18341824582300883_8824388462616980356_n.jpg': { titles: { es: 'Dragón verde', en: 'Green Dragon' }, descriptions: { es: 'Detalle ilustrado de un dragón oriental en verde y dorado.', en: 'Illustrated detail of an Eastern dragon in green and gold.' } },
+	'620942711_18304694077258829_5368602466218761340_n.jpg': { titles: { es: 'Biotaller', en: 'Biotaller' }, descriptions: { es: 'Identidad ilustrada para Biotaller, con personajes y señalética lúdica.', en: 'Illustrated identity for Biotaller, featuring playful characters and signage.' } },
+	'623239497_18302751748262192_5470034736865528476_n.jpg': { titles: { es: 'Dragones Jalisco', en: 'Dragones Jalisco' }, descriptions: { es: 'Logotipo para un equipo de artes marciales mixtas.', en: 'Logo for a mixed martial arts team.' } },
+	'623500491_18088547455875304_8754262200778725096_n.jpg': { titles: { es: 'Hidromiel', en: 'Mead' }, descriptions: { es: 'Ilustración tipográfica de una botella sirviendo una copa.', en: 'Typographic illustration of a bottle pouring into a goblet.' } },
+	'625038192_18149517409447351_696622445701896923_n.jpg': { titles: { es: 'Conejo', en: 'Rabbit' }, descriptions: { es: 'Personaje de conejo con una estética dinámica de cómic.', en: 'Rabbit character with a dynamic comic-book aesthetic.' } },
+	'625050147_18143826268412068_6470228837908340527_n.jpg': { titles: { es: 'Residencias ecosustentables', en: 'Sustainable Residences' }, descriptions: { es: 'Símbolo ilustrado para un proyecto de residencias ecosustentables.', en: 'Illustrated symbol for a sustainable residences project.' } },
+	'625051126_18380377108155826_3944280962404893882_n.jpg': { titles: { es: 'Grizzly Burger & Fries', en: 'Grizzly Burger & Fries' }, descriptions: { es: 'Mascota e identidad para una hamburguesería.', en: 'Mascot and identity for a burger restaurant.' } },
+	'627877299_18417424948188015_5168675099175583448_n.jpg': { titles: { es: 'Planta trepadora', en: 'Climbing Plant' }, descriptions: { es: 'Ilustración botánica decorativa con hojas, flores y frutos.', en: 'Decorative botanical illustration with leaves, flowers, and fruit.' } },
+	'628238454_18420174916138913_2908324020624315935_n.jpg': { titles: { es: 'Hibera Hidromiel', en: 'Hibera Mead' }, descriptions: { es: 'Marca ilustrada para Hibera Hidromiel.', en: 'Illustrated brand mark for Hibera Mead.' } },
+	'628687516_18508066300077910_5657909764521999161_n.jpg': { titles: { es: 'Take Action', en: 'Take Action' }, descriptions: { es: 'Cartel tipográfico con una composición gráfica de alto contraste.', en: 'Typographic poster with a high-contrast graphic composition.' } },
+	'636975176_18575527699037265_1970083294293121194_n.jpg': { titles: { es: 'Personajes de Conacyt', en: 'Conacyt Characters' }, descriptions: { es: 'Pareja de personajes ilustrados para una campaña institucional.', en: 'Illustrated character pair for an institutional campaign.' } },
+	'654885360_18074783618163129_2666836781246203996_n.jpg': { titles: { es: 'Cristal prismático', en: 'Prismatic Crystal' }, descriptions: { es: 'Ilustración de un cristal geométrico con reflejos iridiscentes.', en: 'Geometric crystal illustration with iridescent reflections.' } },
+	'656283589_18101291239937457_204665679584522410_n.jpg': { titles: { es: 'Jardinera', en: 'Gardener' }, descriptions: { es: 'Personaje infantil rodeado de plantas y flores.', en: 'Children’s character surrounded by plants and flowers.' } },
+	'inanna_ishtar_mesopotamian_goddess_study_by_raptoriano_dmmww24-pre.jpg': { titles: { es: 'Estudio de Inanna / Ishtar', en: 'Inanna / Ishtar Study' }, descriptions: { es: 'Estudio de la diosa mesopotámica Inanna / Ishtar.', en: 'Study of the Mesopotamian goddess Inanna / Ishtar.' } },
+	'mexican_art_bird_by_raptoriano_d7wkotl-414w-2x.jpg': { titles: { es: 'Ave de arte mexicano', en: 'Mexican Art Bird' }, descriptions: { es: 'Ave decorativa inspirada en patrones y color del arte mexicano.', en: 'Decorative bird inspired by Mexican art patterns and color.' } },
+	'quick_by_raptoriano_d8e2mt2-375w-2x.jpg': { titles: { es: 'Quick', en: 'Quick' }, descriptions: { es: 'Retrato digital de una joven con tratamiento pictórico.', en: 'Digital portrait of a young woman with a painterly treatment.' } },
+};
 const pre2019Portfolio = pre2019Files.map((file, index) => {
 	const number = String(index + 1).padStart(2, '0');
 	const imageName = basename(file, extname(file));
+	const metadata = pre2019Metadata[file];
 	return {
 		id: `pre2019-${number}`,
-		title: es ? `Imagen anterior ${number}` : `Earlier image ${number}`,
+		title: metadata ? (es ? metadata.titles.es : metadata.titles.en) : (es ? `Imagen anterior ${number}` : `Earlier image ${number}`),
 		category: 'pre-2019',
-		description: es ? 'Añade el cliente, año y contexto de esta imagen.' : 'Add the client, year, and context for this image.',
+		description: metadata ? (es ? metadata.descriptions.es : metadata.descriptions.en) : (es ? 'Imagen del archivo anterior a 2019.' : 'Image from the pre-2019 archive.'),
 		thumbnail: `/images/portfolio/pre2019/thumbs/${imageName}.webp`,
 		finalImage: `/images/portfolio/pre2019/${file}`,
 	};
@@ -601,20 +622,13 @@ const storyLanguages = ['es', 'en'] as const;
 						src=""
 						alt=""
 					/><div class="dialog-copy">
-						<p class="eyebrow dialog-category"></p><h2 id="dialog-title"></h2><p
-							class="dialog-description">
-						</p><div class="youtube-video" hidden><iframe
+						<p class="eyebrow dialog-category"></p><h2 id="dialog-title"></h2><div class="youtube-video" hidden><iframe
 							title=""
 							src=""
 							loading="lazy"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 							referrerpolicy="strict-origin-when-cross-origin"
-							allowfullscreen></iframe></div><a
-							class="button"
-							href=""
-							download
-							>{c.finalArt}</a
-						>
+							allowfullscreen></iframe></div>
 					</div>
 				</div>
 			</dialog>
@@ -797,13 +811,7 @@ const storyLanguages = ['es', 'en'] as const;
 			section.querySelector<HTMLDialogElement>('.portfolio-dialog');
 		const image = dialog?.querySelector<HTMLImageElement>('.dialog-image');
 		const title = dialog?.querySelector<HTMLElement>('#dialog-title');
-		const description = dialog?.querySelector<HTMLElement>(
-			'.dialog-description',
-		);
 		const category = dialog?.querySelector<HTMLElement>('.dialog-category');
-		const finalLink = dialog?.querySelector<HTMLAnchorElement>(
-			'.dialog-copy .button',
-		);
 		const videoBox = dialog?.querySelector<HTMLElement>('.youtube-video');
 		const videoFrame = videoBox?.querySelector<HTMLIFrameElement>('iframe');
 
@@ -855,20 +863,16 @@ const storyLanguages = ['es', 'en'] as const;
 						!project ||
 						!dialog ||
 						!image ||
-						!title ||
-						!description ||
-						!category ||
-						!finalLink
+					!title ||
+					!category
 					)
 						return;
 					image.src = project.finalImage;
 					image.alt = project.title;
 					title.textContent = project.title;
-					description.textContent = project.description;
 					category.textContent =
 						categories.find((item) => item.id === project.category)?.label ??
 						project.category;
-					finalLink.href = project.finalImage;
 					const videoId = getYouTubeVideoId(project.youtubeVideo ?? '');
 					if (videoBox && videoFrame && videoId) {
 						videoFrame.src = `https://www.youtube-nocookie.com/embed/${videoId}`;
